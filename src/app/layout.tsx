@@ -1,6 +1,8 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
-
+import { UploadedImagesProvider } from "../context/uploadedImages"
+import { ClassesProvider } from '@/context/classes'
+import { ProjectProvider } from '@/context/project'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -15,7 +17,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ProjectProvider>
+          <ClassesProvider>
+            <UploadedImagesProvider>
+              {children}
+            </UploadedImagesProvider>
+          </ClassesProvider>
+        </ProjectProvider>
+      </body>
     </html>
   )
 }
