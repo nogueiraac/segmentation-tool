@@ -5,13 +5,13 @@ import { Badge, Button, Card, Col, Row, Select, Tag } from "antd";
 import moment from "moment";
 
 import styles from "../styles/Segmentation.module.css";
-import { Polygon } from "../../types/types";
+import { Class, Image, Polygon } from "@/types";
 
 type CardsSectionProps = {
   setPolygonName: React.Dispatch<React.SetStateAction<string>>;
-  classesOptions: { name: string; color: string }[];
+  classesOptions: Class[];
   selectedPolygon: Polygon | null;
-  selectedImage: React.Dispatch<any>;
+  selectedImage: Image | undefined;
   polygons: Polygon[];
   setPolygons: React.Dispatch<React.SetStateAction<Polygon[]>>;
   classColor: (className: string) => string;
@@ -115,6 +115,7 @@ const CardsSection = ({
 
   const handlePolygonNameChange = (value: string) => {
     const newPolygonName = value;
+    console.log(value)
     setPolygonName(newPolygonName);
   };
 

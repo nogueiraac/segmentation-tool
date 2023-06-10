@@ -8,11 +8,12 @@ import { useRouter } from "next/navigation";
 import styles from "../styles/Segmentation.module.css";
 import Dashboard from "../../components/Dashboard";
 import UploadedImagesContext from "../../context/uploadedImages";
-import { Polygon } from "../../types/types";
+import { Polygon, Image } from "@/types";
 import ButtonsCard from "./buttonsCard";
 import Canvas from "./canvas";
 import CardsSection from "./cardsSection";
 import ClassesContext from "@/context/classes";
+import { randomColorGenerator } from "../utils/randomColorGenerator";
 
 const Segmentation: NextPage = () => {
   const router = useRouter();
@@ -21,23 +22,16 @@ const Segmentation: NextPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
 
-  const [selectedImage, setSelectedImage] = useState<any>();
+  const [selectedImage, setSelectedImage] = useState<Image>();
 
   const [polygons, setPolygons] = useState<Polygon[]>([]);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
-  const [polygonName, setPolygonName] = useState<string>("Alita");
-
+  const [polygonName, setPolygonName] = useState<string>(classes[0].name);
   const [drawingStarted, setDrawingStarted] = useState(false);
   const [inDrawing, setInDrawing] = useState(false);
   const [polygonInDrawing, setPolygonInDrawing] = useState<Polygon | null>(
     null
   );
-
-  const classesOptions = [
-    { name: classes[0], color: "#ffff00" },
-    { name: classes[1], color: "#0000ff" },
-    { name: classes[2], color: "#ff00ff" },
-  ];
 
   useEffect(() => {
     setSelectedImage(uploadedImages[0]);
@@ -216,9 +210,18 @@ const Segmentation: NextPage = () => {
 
   const saveCoordenates = () => {
     const data = {
-      poligonos: polygons,
+      polygons: polygons,
+      classes: classes,
     };
     const coordenadas = JSON.stringify(data);
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      coordenadas
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "data.json";
+
+    link.click();
     console.log(coordenadas);
   };
 
@@ -233,7 +236,7 @@ const Segmentation: NextPage = () => {
     setSelectedPolygon(null);
 
     polygons
-      .filter((polygon: Polygon) => polygon.idImage === selectedImage.id)
+      .filter((polygon: Polygon) => polygon.idImage === selectedImage?.id)
       .forEach((polygon) => {
         if (isPointInsidePolygon(x, y, polygon.points) && !drawingStarted) {
           setSelectedPolygon(polygon);
@@ -267,7 +270,7 @@ const Segmentation: NextPage = () => {
   };
 
   const classColor = (className: string) => {
-    const classObj = classesOptions.find((option) => option.name === className);
+    const classObj = classes.find((option) => option.name === className);
     const classColor = classObj ? classObj.color : "#000000";
     return classColor;
   };
@@ -329,7 +332,7 @@ const Segmentation: NextPage = () => {
           <div>
             <CardsSection
               setPolygonName={setPolygonName}
-              classesOptions={classesOptions}
+              classesOptions={classes}
               selectedPolygon={selectedPolygon}
               selectedImage={selectedImage}
               polygons={polygons}

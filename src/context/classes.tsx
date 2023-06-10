@@ -1,8 +1,9 @@
 'use client';
+import { Class } from "@/types";
 import React, { createContext, useState } from "react";
 
 const useValue = () => {
-  const [classes, setClasses] = useState<string[]>([]);
+  const [classes, setClasses] = useState<Class[]>([]);
   return {
     classes,
     setClasses,

@@ -1,6 +1,6 @@
 'use client';
 import React, { useContext, useEffect, useState } from "react";
-import { Card, Form, Input, Button, Upload as UploadComponent, Modal } from "antd";
+import { Card, Form, Input, Button, Modal } from "antd";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
@@ -11,11 +11,12 @@ import InputFiles from "@/components/InputFiles";
 import ClassesContext from "@/context/classes";
 import ClassesItem from "@/components/ClassesItem";
 import ProjectContext from "@/context/project";
+import { randomColorGenerator } from "../utils/randomColorGenerator";
+import { Class } from "@/types";
 
 const Upload: NextPage = () => {
   const router = useRouter();
   const { TextArea } = Input;
-  const { Dragger } = UploadComponent;
   const [formNewProject] = Form.useForm();
   const [visible, setVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState('');
@@ -53,7 +54,7 @@ const Upload: NextPage = () => {
     e.preventDefault();
 
     if (inputValue.trim() !== '') {
-      setClasses([...classes, inputValue]);
+      setClasses([...classes, {name: inputValue, color: randomColorGenerator()}]);
 
       formNewProject.resetFields(['classes'])
       setInputValue('');
@@ -99,9 +100,9 @@ const Upload: NextPage = () => {
             ></Input>
           </Form.Item>
           <ul style={{ listStyle: 'none', marginBottom: '16px', display: 'flex'}}>
-            {classes.map((item: string) => (
-              <li key={item} style={{ marginBottom: '8px' }}>
-                <ClassesItem content={item} onRemoveClass={onRemoveClass} />
+            {classes.map((item: Class) => (
+              <li key={item.name} style={{ marginBottom: '8px' }}>
+                <ClassesItem content={item.name} onRemoveClass={onRemoveClass} />
               </li>
             ))}
           </ul>
