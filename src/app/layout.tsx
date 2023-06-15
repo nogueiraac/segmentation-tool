@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { UploadedImagesProvider } from "../context/uploadedImages"
 import { ClassesProvider } from '@/context/classes'
 import { ProjectProvider } from '@/context/project'
+import { PolygonsProvider } from '@/context/polygons'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -21,7 +22,9 @@ export default function RootLayout({
         <ProjectProvider>
           <ClassesProvider>
             <UploadedImagesProvider>
-              {children}
+              <PolygonsProvider>
+                {children}
+              </PolygonsProvider>
             </UploadedImagesProvider>
           </ClassesProvider>
         </ProjectProvider>

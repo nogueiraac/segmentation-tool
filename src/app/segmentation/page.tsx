@@ -8,12 +8,12 @@ import { useRouter } from "next/navigation";
 import styles from "../styles/Segmentation.module.css";
 import Dashboard from "../../components/Dashboard";
 import UploadedImagesContext from "../../context/uploadedImages";
-import { Polygon, Image } from "@/types";
+import { Polygon, Image as ImageType } from "@/types";
 import ButtonsCard from "./buttonsCard";
 import Canvas from "./canvas";
 import CardsSection from "./cardsSection";
 import ClassesContext from "@/context/classes";
-import { randomColorGenerator } from "../utils/randomColorGenerator";
+import PolygonsContext from "@/context/polygons";
 
 const Segmentation: NextPage = () => {
   const router = useRouter();
@@ -22,9 +22,8 @@ const Segmentation: NextPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
 
-  const [selectedImage, setSelectedImage] = useState<Image>();
-
-  const [polygons, setPolygons] = useState<Polygon[]>([]);
+  const [selectedImage, setSelectedImage] = useState<ImageType>();
+  const {polygons, setPolygons } = useContext(PolygonsContext);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
   const [polygonName, setPolygonName] = useState<string>(classes[0].name);
   const [drawingStarted, setDrawingStarted] = useState(false);
@@ -35,33 +34,30 @@ const Segmentation: NextPage = () => {
 
   useEffect(() => {
     setSelectedImage(uploadedImages[0]);
-    console.log(uploadedImages[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* useEffect(() => {
-    setPolygons([
-      ...polygons,
-      {
-        points: [
-          [323.8499755859375, 181.4000015258789],
-          [315.8499755859375, 232.4000015258789],
-          [385.8499755859375, 236.4000015258789],
-          [399.8499755859375, 171.4000015258789],
-          [385.8499755859375, 159.4000015258789],
-        ],
-        color: "#ffff00",
-        name: "Alita_1",
-        class: "Alita",
-        id: 0,
-        idImage: uploadedImages[0].id,
-        created_at: new Date("2023-05-16T23:33:39.705Z"),
-      },
-    ]);
-  }, []); */
+  // useEffect(() => {
+  //   setPolygons([
+  //     ...polygons,
+  //     {
+  //       points: [
+  //         [323.8499755859375, 181.4000015258789],
+  //         [315.8499755859375, 232.4000015258789],
+  //         [385.8499755859375, 236.4000015258789],
+  //         [399.8499755859375, 171.4000015258789],
+  //         [385.8499755859375, 159.4000015258789],
+  //       ],
+  //       color: "#ffff00",
+  //       name: "Alita_1",
+  //       class: "Alita",
+  //       id: 0,
+  //       idImage: uploadedImages[0].id,
+  //       created_at: new Date("2023-05-16T23:33:39.705Z"),
+  //     },
+  //   ]);
+  // }, []);
 
   useEffect(() => {
-    console.log(polygons);
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -73,8 +69,8 @@ const Segmentation: NextPage = () => {
     ctx.drawImage(image, 0, 0);
 
     // Desenha todos os polígonos existentes
-    polygons.forEach(({ points, color, id, idImage }) => {
-      if (idImage === selectedImage?.id) {
+    polygons.forEach(({ points, color, id, imageName }) => {
+      if (imageName === selectedImage?.name) {
         ctx.beginPath(); // Começa um novo caminho de desenho
         ctx.moveTo(points[0][0], points[0][1]); // Primeira coordenada, começa por ela
         for (let i = 1; i < points.length; i++) {
@@ -84,9 +80,10 @@ const Segmentation: NextPage = () => {
 
         ctx.lineWidth = 1;
         ctx.fillStyle = `${color}30`;
-
+        console.log('rodou')
         // Se o polígono está selecionado
         if (id === selectedPolygon?.id) {
+          console.log('selecionado', color);
           ctx.lineWidth = 2;
           ctx.fillStyle = `${color}99`;
         }
@@ -99,6 +96,8 @@ const Segmentation: NextPage = () => {
     });
   }, []);
 
+  console.log(polygons);
+
   useEffect(() => {
     const img = new Image();
     img.onload = () => {
@@ -108,7 +107,9 @@ const Segmentation: NextPage = () => {
         canvasRef.current.height = img.height;
       }
     };
-    img.src = selectedImage?.url;
+    if (selectedImage) {
+      img.src = selectedImage?.url;
+    }
   }, [selectedImage]);
 
   useEffect(() => {
@@ -123,8 +124,8 @@ const Segmentation: NextPage = () => {
     ctx.drawImage(image, 0, 0);
 
     // Desenha todos os polígonos existentes
-    polygons.forEach(({ points, color, id, idImage }) => {
-      if (idImage === selectedImage?.id) {
+    polygons.forEach(({ points, color, id, imageName }) => {
+      if (imageName === selectedImage?.name) {
         ctx.beginPath(); // Começa um novo caminho de desenho
         ctx.moveTo(points[0][0], points[0][1]); // Primeira coordenada, começa por ela
         for (let i = 1; i < points.length; i++) {
@@ -134,7 +135,6 @@ const Segmentation: NextPage = () => {
 
         ctx.lineWidth = 1;
         ctx.fillStyle = `${color}30`;
-
         // Se o polígono está selecionado
         if (id === selectedPolygon?.id) {
           ctx.lineWidth = 2;
@@ -189,15 +189,7 @@ const Segmentation: NextPage = () => {
       });
       canvas.style.cursor = cursorOverPolygon ? "pointer" : "default";
     });
-  }, [
-    image,
-    polygons,
-    polygonInDrawing,
-    inDrawing,
-    selectedPolygon,
-    drawingStarted,
-    selectedImage?.id,
-  ]);
+  }, [image, polygons, polygonInDrawing, inDrawing, selectedPolygon, drawingStarted, selectedImage?.name]);
 
   const getMousePosition = (event: MouseEvent) => {
     const canvas = canvasRef.current;
@@ -236,7 +228,7 @@ const Segmentation: NextPage = () => {
     setSelectedPolygon(null);
 
     polygons
-      .filter((polygon: Polygon) => polygon.idImage === selectedImage?.id)
+      .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
       .forEach((polygon) => {
         if (isPointInsidePolygon(x, y, polygon.points) && !drawingStarted) {
           setSelectedPolygon(polygon);
@@ -255,7 +247,7 @@ const Segmentation: NextPage = () => {
         name: `${polygonName}_${polygons.length + 1}`,
         class: polygonName,
         id: polygons.length,
-        idImage: selectedImage?.id,
+        imageName: selectedImage?.name,
         created_at: new Date(),
       });
       setInDrawing(true);

@@ -13,6 +13,7 @@ import ClassesItem from "@/components/ClassesItem";
 import ProjectContext from "@/context/project";
 import { randomColorGenerator } from "../utils/randomColorGenerator";
 import { Class } from "@/types";
+import PolygonsContext from "@/context/polygons";
 
 const Upload: NextPage = () => {
   const router = useRouter();
@@ -20,9 +21,11 @@ const Upload: NextPage = () => {
   const [formNewProject] = Form.useForm();
   const [visible, setVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState('');
+  const [json, setJson] = useState<any>();
   const { uploadedImages, setUploadedImages } = useContext(UploadedImagesContext);
   const { classes, setClasses } = useContext(ClassesContext);
   const { setProject } = useContext(ProjectContext);
+  const { setPolygons } = useContext(PolygonsContext);
   
   const onReset = () => {
     formNewProject.resetFields();
@@ -69,9 +72,31 @@ const Upload: NextPage = () => {
     setClasses(newClasses);
   }
 
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const contents = e?.target?.result;
+      if (typeof contents === 'string') {
+        try {
+          const parsedData = JSON.parse(contents);
+          setJson(parsedData);
+        } catch (error) {
+          console.error('Error parsing JSON file:', error);
+        }
+      }
+    };
+
+    reader.readAsText(file);
+  };
+
   useEffect(() => {
-    console.log(uploadedImages);
-  }, [uploadedImages])
+    if (json) {
+      setClasses(json.classes);
+      setPolygons(json.polygons);
+    }
+  }, [json, setClasses])
 
   return (
     <>
@@ -93,11 +118,12 @@ const Upload: NextPage = () => {
           <Form.Item label="Classes" name="classes">
             <Input 
               placeholder="Classes" 
-              required
+              disabled={json}
               value={inputValue} 
               onChange={(e) => setInputValue(e.target.value)}
               onPressEnter={handleInputEnter}
             ></Input>
+            <input type="file" onChange={handleFileChange} />
           </Form.Item>
           <ul style={{ listStyle: 'none', marginBottom: '16px', display: 'flex'}}>
             {classes.map((item: Class) => (
