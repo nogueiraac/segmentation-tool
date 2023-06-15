@@ -1,12 +1,11 @@
 'use client';
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { Card, Breadcrumb } from "antd";
+import { Card } from "antd";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 
 import styles from "../styles/Segmentation.module.css";
-import Dashboard from "../../components/Dashboard";
 import UploadedImagesContext from "../../context/uploadedImages";
 import { Polygon, Image as ImageType } from "@/types";
 import ButtonsCard from "./buttonsCard";
@@ -25,7 +24,7 @@ const Segmentation: NextPage = () => {
   const [selectedImage, setSelectedImage] = useState<ImageType>();
   const {polygons, setPolygons } = useContext(PolygonsContext);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
-  const [polygonName, setPolygonName] = useState<string>(classes[0].name);
+  const [polygonName, setPolygonName] = useState<string>(classes[0]?.name);
   const [drawingStarted, setDrawingStarted] = useState(false);
   const [inDrawing, setInDrawing] = useState(false);
   const [polygonInDrawing, setPolygonInDrawing] = useState<Polygon | null>(
@@ -253,16 +252,24 @@ const Segmentation: NextPage = () => {
       setInDrawing(true);
     } else {
       // Adiciona um ponto ao polígono atual
-      setPolygonInDrawing((prevPolygon) => {
-        if (!prevPolygon) return null;
-        const newPoints = [...prevPolygon.points, [x, y]];
-        return { ...prevPolygon, points: newPoints };
-      });
+      const coordenadasAtualizadas = polygonInDrawing?.points;
+
+      // Adiciona uma nova coordenada ao array
+      coordenadasAtualizadas!.push([x, y]);
+      if (coordenadasAtualizadas) {
+        setPolygonInDrawing({...polygonInDrawing, points: coordenadasAtualizadas});
+      }
+      // Atualiza o estado com o novo array de coordenadas
+      // setPolygonInDrawing((prevPolygon: Polygon) => {
+      //   if (!prevPolygon) return null;
+      //   const newPoints = [...prevPolygon.points, [x, y]];
+      //   return { ...prevPolygon, points: newPoints };
+      // });
     }
   };
 
   const classColor = (className: string) => {
-    const classObj = classes.find((option) => option.name === className);
+    const classObj = classes.find((option) => option?.name === className);
     const classColor = classObj ? classObj.color : "#000000";
     return classColor;
   };

@@ -96,7 +96,7 @@ const Upload: NextPage = () => {
       setClasses(json.classes);
       setPolygons(json.polygons);
     }
-  }, [json, setClasses])
+  }, [json, setClasses, setPolygons])
 
   return (
     <>

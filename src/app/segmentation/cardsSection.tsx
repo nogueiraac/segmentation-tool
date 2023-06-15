@@ -36,7 +36,7 @@ const CardsSection = ({
 
   const onRemove = (item: Polygon) => {
     const newArray = polygons.filter(
-      (polygon: Polygon) => polygon.name !== item.name
+      (polygon: Polygon) => polygon?.name !== item?.name
     );
     setSelectedPolygon(null);
     setPolygons(newArray);
@@ -55,7 +55,7 @@ const CardsSection = ({
 
   const polygonGroups: { [key: string]: number } = {};
   polygons
-    .filter((polygon: Polygon) => polygon.idImage === selectedImage?.id)
+    .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
     .forEach((polygon: Polygon) => {
       const polygonClass = polygon.class;
       polygonGroups[polygonClass] = (polygonGroups[polygonClass] || 0) + 1;
@@ -83,7 +83,7 @@ const CardsSection = ({
       polygons.length > 0 ? (
         <Row gutter={[16, 12]}>
           {polygons
-            .filter((polygon: Polygon) => polygon.idImage === selectedImage?.id)
+            .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
             .map((polygon: Polygon) => (
               <div
                 key={polygon.id}
@@ -139,11 +139,11 @@ const CardsSection = ({
       >
         <Select
           style={{ width: "100%" }}
-          defaultValue={classesOptions[0].name}
+          defaultValue={classesOptions[0]?.name}
           onChange={handlePolygonNameChange}
           options={classesOptions.map((option: { name: any }) => ({
-            label: option.name,
-            value: option.name,
+            label: option?.name,
+            value: option?.name,
           }))}
         />
       </Card>
@@ -154,7 +154,7 @@ const CardsSection = ({
             <br />
             <span>Class: {selectedPolygon.class}</span>
             <br />
-            <span>idImage: {selectedPolygon.idImage}</span>
+            <span>Image Name: {selectedPolygon.imageName}</span>
             <br />
             <br />
             <span>
