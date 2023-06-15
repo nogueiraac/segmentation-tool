@@ -1,0 +1,19 @@
+.cardContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.image {
+  width: 100%;
+  max-width: 50px;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardLeftContent {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

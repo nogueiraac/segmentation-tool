@@ -1,0 +1,14 @@
+.card_ant {
+  margin: 1.4% 1.4% 1.4% 1.4%;
+
+  border-radius: 8px;
+  box-shadow: 0 0px 5px 0px rgba(0, 0, 0, 0.1);
+
+  overflow-y: auto;
+  max-height: 95vh;
+  min-height: 95vh;
+}
+
+.table {
+  box-shadow: 0 0px 5px 0px rgba(0, 0, 0, 0.1);
+}

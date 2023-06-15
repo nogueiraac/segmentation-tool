@@ -1,0 +1,24 @@
+.login {
+  text-align: center;
+}
+  
+.login_header {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  width: 100%;
+  border-radius: 4px;
+  padding: 30px 30px 8px 30px;
+}
+
+.form_input {
+  border-radius: 4px;
+}
+
+.form_button {
+  border-radius: 4px;
+}
