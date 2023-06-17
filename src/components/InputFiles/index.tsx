@@ -70,8 +70,6 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
       aux.push(fileObj)
       setUploadedImages(uploadedImages.concat(aux));
     }
-
-    console.log(files);
   };
 
   return (
@@ -85,11 +83,7 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
         <InboxOutlined rev={undefined} style={{ fontSize: '48px' }} />
       </p>
       <p className="ant-upload-text">
-        Click or drag file to this area to upload. Max: 10.
-      </p>
-      <p className="ant-upload-hint">
-        If you exceed the limit on the number of images. Only the first 10
-        images will be accepted
+        Click or drag file image to this area to upload.
       </p>
       <input id="input" type="file" onChange={handleUploadFile} multiple style={{ display: 'none'}} />
     </div>
