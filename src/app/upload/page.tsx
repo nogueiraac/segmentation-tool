@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Card, Form, Input, Button, Modal } from "antd";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { UploadOutlined } from '@ant-design/icons';
 import { useRouter } from "next/navigation";
 import UploadedImagesContext from "../../context/uploadedImages";
 import styles from "../styles/NewProject.module.css";
@@ -24,26 +25,23 @@ const Upload: NextPage = () => {
   const [json, setJson] = useState<any>();
   const { uploadedImages, setUploadedImages } = useContext(UploadedImagesContext);
   const { classes, setClasses } = useContext(ClassesContext);
-  const { setProject } = useContext(ProjectContext);
+  const { project, setProject } = useContext(ProjectContext);
   const { setPolygons } = useContext(PolygonsContext);
   
   const onReset = () => {
     formNewProject.resetFields();
   };
 
-  const onAccepted = () => {
-    setUploadedImages(uploadedImages.slice(0, 10));
-    router.push('/segmentatio1');
-  };
-
   const onUpload = () => {
-    if (uploadedImages.length >= 11) {
-      setVisible(true);
-    } else {
-      const aux = formNewProject.getFieldsValue();
-      setProject({...aux, classes: classes})
+    const aux = formNewProject.getFieldsValue();
+      console.log(aux);
+      setProject({
+        classes: classes,
+        description: aux.descriptionProject,
+        name: aux.nameProject,
+        images: uploadedImages,
+      })
       router.push("/segmentation");
-    }
   };
 
   const onRemove = (item: any) => {
@@ -65,9 +63,8 @@ const Upload: NextPage = () => {
   };
 
   const onRemoveClass = (item: string) => {
-    console.log(item);
     const newClasses = classes.filter(
-      (classItem: any) => classItem !== item
+      (classItem: Class) => classItem.name !== item
     );
     setClasses(newClasses);
   }
@@ -107,7 +104,7 @@ const Upload: NextPage = () => {
       <Card className={styles.card_ant}>
         <Form form={formNewProject} layout="vertical">
           <Form.Item label="Name" name="nameProject" required>
-            <Input placeholder="Name" required></Input>
+            <Input placeholder="Name" value={project.name} required></Input>
           </Form.Item>
           <Form.Item label="Description" name="descriptionProject">
             <TextArea
@@ -123,8 +120,11 @@ const Upload: NextPage = () => {
               onChange={(e) => setInputValue(e.target.value)}
               onPressEnter={handleInputEnter}
             ></Input>
-            <input type="file" onChange={handleFileChange} />
           </Form.Item>
+            <Form.Item label="Upload Json">
+              <input id="inputJson" type="file" onChange={handleFileChange} style={{ display: 'none'}} hidden />
+              <Button onClick={() => document.getElementById('inputJson')?.click()} icon={<UploadOutlined />}> Upload Json </Button>
+            </Form.Item>
           <ul style={{ listStyle: 'none', marginBottom: '16px', display: 'flex'}}>
             {classes.map((item: Class) => (
               <li key={item.name} style={{ marginBottom: '8px' }}>
@@ -132,11 +132,15 @@ const Upload: NextPage = () => {
               </li>
             ))}
           </ul>
-          <InputFiles />
-          <div className={styles.imagesList}>
-            {uploadedImages?.map((item) => (
-              <ImageListITem key={item.id} item={item} onRemove={onRemove} />
-            ))}
+          <InputFiles setVisible={setVisible} />
+          <div style={{ display: 'flex', width: '100%' }}>
+            <ul className={styles.imagesList}>
+              {uploadedImages?.map((item) => (
+                <li key={item.id}>
+                  <ImageListITem item={item} onRemove={onRemove} />
+                </li>
+              ))}
+            </ul>
           </div>
           <div className={styles.buttons}>
             <Button
@@ -158,15 +162,6 @@ const Upload: NextPage = () => {
           </div>
         </Form>
       </Card>
-      <Modal
-        open={visible}
-        closable
-        onCancel={() => setVisible(false)}
-        onOk={() => onAccepted()}
-        title="Maximum value of images exceeded"
-      >
-        If you continue only the first 10 images will be added to the project.
-      </Modal>
     </>
   );
 };

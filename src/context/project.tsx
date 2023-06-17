@@ -1,8 +1,16 @@
 'use client';
+import { Project } from "@/types";
 import React, { createContext, useState } from "react";
 
+const intialProject: Project = {
+  classes: [],
+  description: "",
+  name: "",
+  images: [],
+}
+
 const useValue = () => {
-  const [project, setProject] = useState<any>();
+  const [project, setProject] = useState<Project>(intialProject);
   return {
     project,
     setProject,

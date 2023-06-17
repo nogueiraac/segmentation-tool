@@ -13,6 +13,7 @@ import Canvas from "./canvas";
 import CardsSection from "./cardsSection";
 import ClassesContext from "@/context/classes";
 import PolygonsContext from "@/context/polygons";
+import ProjectContext from "@/context/project";
 
 const Segmentation: NextPage = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const Segmentation: NextPage = () => {
   const { classes } = useContext(ClassesContext);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
-
+  const { project, setProject } = useContext(ProjectContext);
   const [selectedImage, setSelectedImage] = useState<ImageType>();
   const {polygons, setPolygons } = useContext(PolygonsContext);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
@@ -34,27 +35,6 @@ const Segmentation: NextPage = () => {
   useEffect(() => {
     setSelectedImage(uploadedImages[0]);
   }, []);
-
-  // useEffect(() => {
-  //   setPolygons([
-  //     ...polygons,
-  //     {
-  //       points: [
-  //         [323.8499755859375, 181.4000015258789],
-  //         [315.8499755859375, 232.4000015258789],
-  //         [385.8499755859375, 236.4000015258789],
-  //         [399.8499755859375, 171.4000015258789],
-  //         [385.8499755859375, 159.4000015258789],
-  //       ],
-  //       color: "#ffff00",
-  //       name: "Alita_1",
-  //       class: "Alita",
-  //       id: 0,
-  //       idImage: uploadedImages[0].id,
-  //       created_at: new Date("2023-05-16T23:33:39.705Z"),
-  //     },
-  //   ]);
-  // }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -200,11 +180,16 @@ const Segmentation: NextPage = () => {
   };
 
   const saveCoordenates = () => {
+    console.log(project);
     const data = {
-      polygons: polygons,
+      projectName: project.name,
+      projectDescription: project.description,
+      images: project.images,
       classes: classes,
     };
+    console.log(data);
     const coordenadas = JSON.stringify(data);
+    console.log('teste', coordenadas)
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       coordenadas
     )}`;
@@ -365,7 +350,7 @@ const Segmentation: NextPage = () => {
                   key={item.id}
                   style={{
                     border:
-                      selectedImage?.id === item.id ? "3px solid yellow" : "",
+                      selectedImage?.id === item.id ? "3px solid blue" : "",
                   }}
                   onClick={() => {
                     setSelectedImage(item);

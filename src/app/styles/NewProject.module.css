@@ -1,5 +1,10 @@
 .imagesList {
   margin-top: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
 }
 
 .buttons {

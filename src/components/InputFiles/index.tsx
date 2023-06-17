@@ -4,7 +4,11 @@ import styles from "./styles.module.css";
 import UploadedImagesContext from '@/context/uploadedImages';
 import uuid from 'react-uuid';
 
-const InputFiles = () => {
+interface InputFilesProps {
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const InputFiles = ({ setVisible }: InputFilesProps) => {
   const { uploadedImages, setUploadedImages } = useContext(UploadedImagesContext);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -12,18 +16,33 @@ const InputFiles = () => {
     const files: any[] = event.target.files;
     const aux = [];
     console.log(files.length);
-    for (let index = 0; index < files.length; index += 1) {
-      const fileObj = {
-        id: uuid(),
-        name: files[index].name,
-        type: files[index].type,
-        url: URL.createObjectURL(files[index]),
-        polygons: [],
-      };
-      aux.push(fileObj)
-      setUploadedImages(uploadedImages.concat(aux));
+    if (files.length < 10) {
+      for (let index = 0; index < files.length; index += 1) {
+        const fileObj = {
+          id: uuid(),
+          name: files[index].name,
+          type: files[index].type,
+          url: URL.createObjectURL(files[index]),
+          polygons: [],
+        };
+        aux.push(fileObj)
+        setUploadedImages(uploadedImages.concat(aux));
+      }
+    } else {
+      setVisible(true);
+      for (let index = 0; index < files.length; index += 1) {
+        const fileObj = {
+          id: uuid(),
+          name: files[index].name,
+          type: files[index].type,
+          url: URL.createObjectURL(files[index]),
+          polygons: [],
+        };
+        aux.push(fileObj)
+        setUploadedImages(uploadedImages.concat(aux).slice(0, 10));
     }
   }
+}
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

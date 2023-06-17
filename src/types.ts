@@ -9,7 +9,7 @@ export type Polygon = {
   name: string;
   class: string;
   id: number;
-  imageName: string | undefined;
+  imageName: string;
   created_at: Date;
 };
 
@@ -23,7 +23,7 @@ export type Image = {
 
 export type Project = {
   name: string;
-  description?: string;
+  description: string;
   images: Image[];
-  status: string;
+  classes: Class[];
 };
