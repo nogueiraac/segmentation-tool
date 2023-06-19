@@ -31,7 +31,7 @@ const Segmentation: NextPage = () => {
     UploadedImagesContext
   );
   const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [selectedImage, setSelectedImage] = useState<ImageType>();
+  const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
   const { project, setProject } = useContext(ProjectContext);
   const { classes, setClasses } = useContext(ClassesContext);
   const {polygons, setPolygons } = useContext(PolygonsContext);
@@ -44,6 +44,12 @@ const Segmentation: NextPage = () => {
   } | null>(null);
 
   const [movingVertex, setMovingVertex] = useState(false);
+
+  const classColor = (className: string) => {
+    const classObj = classes.find((option) => option?.name === className);
+    const classColor = classObj ? classObj.color : "#000000";
+    return classColor;
+  };
 
   const [drawingStarted, setDrawingStarted] = useState(false);
   const [inDrawing, setInDrawing] = useState(false); // PERGUNTAR SE PRECISA DO IN DRAWING
@@ -235,12 +241,20 @@ const Segmentation: NextPage = () => {
       });
       setInDrawing(true);
     } else {
+      const coordenadasAtualizadas = polygonInDrawing?.points;
+
+      // Adiciona uma nova coordenada ao array
+      coordenadasAtualizadas!.push([x, y]);
+      if (coordenadasAtualizadas) {
+        setPolygonInDrawing({...polygonInDrawing, points: coordenadasAtualizadas});
+      }
       // Adiciona um ponto ao polígono atual
-      setPolygonInDrawing((prevPolygon) => {
-        if (!prevPolygon) return null;
-        const newPoints = [...prevPolygon.points, [x, y]];
-        return { ...prevPolygon, points: newPoints };
-      });
+      // setPolygonInDrawing((prevPolygon) => {
+      //   if (!prevPolygon) return null;
+      //   const newPoints = [...prevPolygon.points, [x, y]];
+      //   return { ...prevPolygon, points: newPoints };
+      // });
+
     }
   };
 
@@ -261,12 +275,6 @@ const Segmentation: NextPage = () => {
 
     link.click();
     console.log(coordenadas);
-  };
-
-  const classColor = (className: string) => {
-    const classObj = classes.find((option) => option?.name === className);
-    const classColor = classObj ? classObj.color : "#000000";
-    return classColor;
   };
 
   const handleStartButtonClick = () => {

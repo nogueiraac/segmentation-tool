@@ -11,7 +11,7 @@ type CardsSectionProps = {
   setPolygonName: React.Dispatch<React.SetStateAction<string>>;
   classesOptions: Class[];
   selectedPolygon: Polygon | null;
-  selectedImage: Image | undefined;
+  selectedImage: Image | null;
   polygons: Polygon[];
   setPolygons: React.Dispatch<React.SetStateAction<Polygon[]>>;
   classColor: (className: string) => string;
