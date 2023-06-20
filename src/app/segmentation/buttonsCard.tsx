@@ -61,7 +61,7 @@ const ButtonsCard = ({
 }: ButtonsCardProps) => {
   return (
     <div>
-      <div style={{ display: "inline-block" }}>
+      <div style={{ display: "inline-block", marginRight: '16px' }}>
         <Card className={styles.card_tools} size="small">
           <Space direction="vertical" align="center" size={"middle"}>
             <Button

@@ -154,8 +154,6 @@ const CardsSection = ({
             <br />
             <span>Class: {selectedPolygon.class}</span>
             <br />
-            <span>Image Name: {selectedPolygon.imageName}</span>
-            <br />
             <br />
             <span>
               {moment(selectedPolygon.created_at).format("DD/MM/Y [at] HH:mm")}

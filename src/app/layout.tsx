@@ -18,12 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} style={{ width: '100vw', height: '100vh'}}>
         <ProjectProvider>
           <ClassesProvider>
             <UploadedImagesProvider>
               <PolygonsProvider>
-                {children}
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', padding: '32px' }}>
+                  {children}
+                </div>
               </PolygonsProvider>
             </UploadedImagesProvider>
           </ClassesProvider>

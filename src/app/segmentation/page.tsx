@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, useRef, useContext } from "react";
 
-import { Card, Breadcrumb, Image as ImageAntd } from "antd";
+import { Card } from "antd";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import NextImage from "next/image";
@@ -499,6 +499,7 @@ const Segmentation: NextPage = () => {
   };
 
   return (
+    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Card className={styles.card_ant}>
         <div className={styles.content_wrapper}>
           <div>
@@ -571,6 +572,7 @@ const Segmentation: NextPage = () => {
           </Card>
         </div>
       </Card>
+    </div>
   );
 };
 
