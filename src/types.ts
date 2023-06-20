@@ -9,6 +9,7 @@ export type Polygon = {
   name: string;
   class: string;
   id: number;
+  urlImage: string;
   imageName: string;
   created_at: Date;
 };

@@ -236,6 +236,7 @@ const Segmentation: NextPage = () => {
         name: `${polygons.length + 1}-${polygonName}`,
         class: polygonName,
         id: polygons.length,
+        urlImage: selectedImage?.url || '',
         imageName: selectedImage?.name || '',
         created_at: new Date(),
       });
