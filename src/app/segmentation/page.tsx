@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Card, Breadcrumb, Image as ImageAntd } from "antd";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
-
+import NextImage from "next/image";
 import styles from "../styles/Segmentation.module.css";
 import UploadedImagesContext from "../../context/uploadedImages";
 import { Polygon, Image as ImageType } from "@/types";
@@ -559,12 +559,12 @@ const Segmentation: NextPage = () => {
                   setDragPosition([0.0, 0.0]);
                 }}
               >
-                <ImageAntd
-                  width={60}
-                  height={60}
-                  src={item.url}
-                  alt="Image uploaded"
-                  preview={false}
+                <NextImage
+                 className={styles.image}
+                 src={item.url}
+                 alt="Image uploaded"
+                 height={0}
+                 width={0}
                 />
               </li>
             ))}
