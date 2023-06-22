@@ -15,7 +15,7 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
   const handleUploadFile = (event: any) => {
     const files: any[] = event.target.files;
     const aux = [];
-    console.log(files.length);
+    console.log(files);
     if (files.length < 10) {
       for (let index = 0; index < files.length; index += 1) {
         const fileObj = {

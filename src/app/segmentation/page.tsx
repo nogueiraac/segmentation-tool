@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect, useRef, useContext } from "react";
 
 import { Card } from "antd";
@@ -34,7 +34,7 @@ const Segmentation: NextPage = () => {
   const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
   const { project, setProject } = useContext(ProjectContext);
   const { classes, setClasses } = useContext(ClassesContext);
-  const {polygons, setPolygons } = useContext(PolygonsContext);
+  const { polygons, setPolygons } = useContext(PolygonsContext);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
   const [polygonName, setPolygonName] = useState<string>(classes[0]?.name);
 
@@ -61,6 +61,7 @@ const Segmentation: NextPage = () => {
   const [dragPosition, setDragPosition] = useState([0.0, 0.0]);
 
   const initialCanvas = { width: 800, height: 400 };
+  const [newImageProportion, setNewImageProportion] = useState<any[]>([]);
 
   useEffect(() => {
     if (uploadedImages.length > 0) {
@@ -77,7 +78,15 @@ const Segmentation: NextPage = () => {
 
       setImage(img);
 
-      const { width, height } = resizeImage(img, initialCanvas);
+      const { width, height, qtd } = resizeImage(img, initialCanvas);
+
+      setNewImageProportion((prevNewImageProportion) => [
+        ...prevNewImageProportion,
+        {
+          imageName: selectedImage.name,
+          qtd: qtd,
+        },
+      ]);
 
       canvasRef.current.width = width;
       canvasRef.current.height = height;
@@ -154,7 +163,7 @@ const Segmentation: NextPage = () => {
     });
   }
 
-  console.log(selectedImage)
+  // console.log(selectedImage);
 
   const getMousePosition = (event: MouseEvent) => {
     const canvas = canvasRef.current;
@@ -236,8 +245,8 @@ const Segmentation: NextPage = () => {
         name: `${polygons.length + 1}-${polygonName}`,
         class: polygonName,
         id: polygons.length,
-        urlImage: selectedImage?.url || '',
-        imageName: selectedImage?.name || '',
+        urlImage: selectedImage?.url || "",
+        imageName: selectedImage?.name || "",
         created_at: new Date(),
       });
       setInDrawing(true);
@@ -247,7 +256,10 @@ const Segmentation: NextPage = () => {
       // Adiciona uma nova coordenada ao array
       coordenadasAtualizadas!.push([x, y]);
       if (coordenadasAtualizadas) {
-        setPolygonInDrawing({...polygonInDrawing, points: coordenadasAtualizadas});
+        setPolygonInDrawing({
+          ...polygonInDrawing,
+          points: coordenadasAtualizadas,
+        });
       }
       // Adiciona um ponto ao polígono atual
       // setPolygonInDrawing((prevPolygon) => {
@@ -255,15 +267,22 @@ const Segmentation: NextPage = () => {
       //   const newPoints = [...prevPolygon.points, [x, y]];
       //   return { ...prevPolygon, points: newPoints };
       // });
-
     }
   };
 
   const saveCoordenates = () => {
+    let aux = polygons.map(({ imageName, points }) => {
+      for (let i = 0; i < points.length; i++) {
+        console.log(newImageProportion);
+        points[i][0] *=
+          newImageProportion[0].qtd;
+      }
+    });
+
     const data = {
       projectName: project.name,
       projectDescription: project.description,
-      polygons,
+      aux,
       classes: classes,
     };
     const coordenadas = JSON.stringify(data);
@@ -273,6 +292,9 @@ const Segmentation: NextPage = () => {
     const link = document.createElement("a");
     link.href = jsonString;
     link.download = "data.json";
+
+    // for(let )
+    // console.log(newImageProportion);
 
     link.click();
     console.log(coordenadas);
@@ -291,8 +313,8 @@ const Segmentation: NextPage = () => {
     for (let i = 0; i < polygonInDrawing.points.length; i++) {
       polygonInDrawing.points[i][0] =
         polygonInDrawing.points[i][0] / scale - dragPosition[0];
-      polygonInDrawing.points[i][1]=
-        polygonInDrawing.points[i][1]/ scale - dragPosition[1];
+      polygonInDrawing.points[i][1] =
+        polygonInDrawing.points[i][1] / scale - dragPosition[1];
     }
 
     setPolygons((prevPolygons) => [
@@ -321,7 +343,8 @@ const Segmentation: NextPage = () => {
     polygons
       .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
       .filter((polygon: Polygon) => polygon.id === selectedVertex.polygonId)
-      .forEach(({ points }) => {setPolygons
+      .forEach(({ points }) => {
+        setPolygons;
         if (points.length <= 3) {
           setPolygons((prevPolygons) =>
             prevPolygons.filter(
@@ -499,7 +522,15 @@ const Segmentation: NextPage = () => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Card className={styles.card_ant}>
         <div className={styles.content_wrapper}>
           <div>
@@ -561,11 +592,11 @@ const Segmentation: NextPage = () => {
                 }}
               >
                 <NextImage
-                 className={styles.image}
-                 src={item.url}
-                 alt="Image uploaded"
-                 height={0}
-                 width={0}
+                  className={styles.image}
+                  src={item.url}
+                  alt="Image uploaded"
+                  height={0}
+                  width={0}
                 />
               </li>
             ))}

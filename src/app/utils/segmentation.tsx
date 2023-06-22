@@ -94,13 +94,15 @@ export const resizeImage = (
   let width = image.width * proportion;
   let height = image.height * proportion;
 
+  let qtd = 1;
   // Aumenta o tamanho da imagem em 10% enquanto estiver dentro dos limites.
   while (width * 1.1 <= 900 && height * 1.1 <= 500) {
     width *= 1.1;
     height *= 1.1;
+    qtd *= 1.1;
   }
 
-  return { width, height };
+  return { width, height, qtd };
 };
 
 export const isPointInsidePolygon = (
