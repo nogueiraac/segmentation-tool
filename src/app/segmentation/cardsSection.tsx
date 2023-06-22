@@ -115,7 +115,6 @@ const CardsSection = ({
 
   const handlePolygonNameChange = (value: string) => {
     const newPolygonName = value;
-    console.log(value)
     setPolygonName(newPolygonName);
   };
 

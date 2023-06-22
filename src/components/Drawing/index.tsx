@@ -197,8 +197,6 @@ const Drawing: React.FC = () => {
       },
     ]);
 
-    console.log(polygons);
-
     setPolygonInDrawing(null);
     setInDrawing(false);
     setDrawingStarted(false);

@@ -34,7 +34,6 @@ const Upload: NextPage = () => {
 
   const onUpload = () => {
     const aux = formNewProject.getFieldsValue();
-      console.log(aux);
       setProject({
         classes: classes,
         description: aux.descriptionProject,

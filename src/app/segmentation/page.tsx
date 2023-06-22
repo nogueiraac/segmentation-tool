@@ -77,11 +77,6 @@ const Segmentation: NextPage = () => {
     }
   }, [uploadedImages]);
 
-  
-  useEffect(() => {
-    console.log('dancin', uploadedImages);
-  }, [uploadedImages]);
-
   useEffect(() => {
     if (!selectedImage) return;
     const img = new Image();
@@ -108,18 +103,6 @@ const Segmentation: NextPage = () => {
 
   useEffect(() => {
     if(image) {
-      // console.log(image.width)
-      // const teste = uploadedImages.indexOf(selectedImage);
-      // if(image.src === selectedImage.url) {
-      //   console.log('21 pilots', selectedImage.url, image.src)
-      // }
-      // console.log(teste);
-      // const newUploadedImages = [...uploadedImages];
-      // if (newUploadedImages[teste]?.width === 0 && newUploadedImages[teste]?.height === 0 && newUploadedImages[teste].url === selectedImage.url){
-      //   console.log('entrou aqui', )
-      //   newUploadedImages[teste] = {...newUploadedImages[teste], width: image!.width, height: image!.height}
-      //   setUploadedImages(newUploadedImages);
-      // }
       let teste = uploadedImages.map((item: ImageType) => {
         if(item.name === selectedImage.name) {
           item.height = image.height
@@ -201,8 +184,6 @@ const Segmentation: NextPage = () => {
       canvas.style.cursor = cursorOverPolygon ? "pointer" : "default";
     });
   }
-
-  // console.log(selectedImage);
 
   const getMousePosition = (event: MouseEvent) => {
     const canvas = canvasRef.current;
@@ -332,11 +313,7 @@ const Segmentation: NextPage = () => {
     link.href = jsonString;
     link.download = "data.json";
 
-    // for(let )
-    // console.log(newImageProportion);
-
     link.click();
-    console.log(coordenadas);
   };
 
   const handleStartButtonClick = () => {
