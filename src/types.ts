@@ -19,7 +19,8 @@ export type Image = {
   name: string;
   type: string;
   url: string;
-  polygons: Polygon[];
+  width: number;
+  height: number;
 };
 
 export type Project = {

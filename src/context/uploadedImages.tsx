@@ -1,8 +1,9 @@
 'use client';
+import { Image } from "@/types";
 import React, { createContext, useState } from "react";
 
 const useValue = () => {
-  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<Image[]>([]);
   return {
     uploadedImages,
     setUploadedImages,

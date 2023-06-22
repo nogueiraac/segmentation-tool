@@ -18,6 +18,7 @@ import {
   resizeImage,
   isPointInsidePolygon,
   isPointInsideVertex,
+  calculateOriginalCoordinates,
 } from "../utils/segmentation";
 import ProjectContext from "@/context/project";
 import ClassesContext from "@/context/classes";
@@ -31,7 +32,14 @@ const Segmentation: NextPage = () => {
     UploadedImagesContext
   );
   const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ImageType>({
+    height: 0,
+    id: '',
+    name: '',
+    type: '',
+    url: '',
+    width: 0,
+  });
   const { project, setProject } = useContext(ProjectContext);
   const { classes, setClasses } = useContext(ClassesContext);
   const { polygons, setPolygons } = useContext(PolygonsContext);
@@ -69,6 +77,11 @@ const Segmentation: NextPage = () => {
     }
   }, [uploadedImages]);
 
+  
+  useEffect(() => {
+    console.log('dancin', uploadedImages);
+  }, [uploadedImages]);
+
   useEffect(() => {
     if (!selectedImage) return;
     const img = new Image();
@@ -77,9 +90,7 @@ const Segmentation: NextPage = () => {
       if (!canvasRef.current) return;
 
       setImage(img);
-
       const { width, height, qtd } = resizeImage(img, initialCanvas);
-
       setNewImageProportion((prevNewImageProportion) => [
         ...prevNewImageProportion,
         {
@@ -94,6 +105,34 @@ const Segmentation: NextPage = () => {
 
     img.src = selectedImage.url;
   }, [selectedImage]);
+
+  useEffect(() => {
+    if(image) {
+      // console.log(image.width)
+      // const teste = uploadedImages.indexOf(selectedImage);
+      // if(image.src === selectedImage.url) {
+      //   console.log('21 pilots', selectedImage.url, image.src)
+      // }
+      // console.log(teste);
+      // const newUploadedImages = [...uploadedImages];
+      // if (newUploadedImages[teste]?.width === 0 && newUploadedImages[teste]?.height === 0 && newUploadedImages[teste].url === selectedImage.url){
+      //   console.log('entrou aqui', )
+      //   newUploadedImages[teste] = {...newUploadedImages[teste], width: image!.width, height: image!.height}
+      //   setUploadedImages(newUploadedImages);
+      // }
+      let teste = uploadedImages.map((item: ImageType) => {
+        if(item.name === selectedImage.name) {
+          item.height = image.height
+          item.width = image.width;
+
+          return item;
+        }
+        return item;
+      })
+
+      setUploadedImages(teste);
+    }
+  }, [image]);
 
   useEffect(() => {
     if (!image) return;
@@ -271,18 +310,18 @@ const Segmentation: NextPage = () => {
   };
 
   const saveCoordenates = () => {
-    let aux = polygons.map(({ imageName, points }) => {
-      for (let i = 0; i < points.length; i++) {
-        console.log(newImageProportion);
-        points[i][0] *=
-          newImageProportion[0].qtd;
-      }
+    let aux: any[] = [];
+    polygons.forEach(({ imageName, points }) => {
+      aux = points.map((item: [number, number]) => {
+        return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: 1422, height: 800}, { width: 860.3100000000001, height: 484.0000000000001})
+      })
     });
-
+    const newPolygons = aux.flatMap((tupla: [number, number]) => tupla)
     const data = {
       projectName: project.name,
       projectDescription: project.description,
-      aux,
+      newPolygons,
+      images: uploadedImages,
       classes: classes,
     };
     const coordenadas = JSON.stringify(data);
@@ -575,31 +614,33 @@ const Segmentation: NextPage = () => {
             title={`Images List • ${selectedImage?.name}`}
             className={styles.imagesCard}
           >
-            {uploadedImages.map((item: any) => (
-              <li
-                className={styles.imagesListItem}
-                key={item.id}
-                style={{
-                  border:
-                    selectedImage?.id === item.id ? "3px solid black" : "",
-                }}
-                onClick={() => {
-                  setSelectedImage(item);
-                  setSelectedPolygon(null);
-                  setSelectedVertex(null);
-                  setScale(1.0);
-                  setDragPosition([0.0, 0.0]);
-                }}
-              >
-                <NextImage
-                  className={styles.image}
-                  src={item.url}
-                  alt="Image uploaded"
-                  height={0}
-                  width={0}
-                />
-              </li>
-            ))}
+            <ul className={styles.imagesList}>
+              {uploadedImages.map((item: any) => (
+                <li
+                  className={styles.imagesListItem}
+                  key={item.id}
+                  style={{
+                    border:
+                      selectedImage?.id === item.id ? "3px solid black" : "",
+                  }}
+                  onClick={() => {
+                    setSelectedImage(item);
+                    setSelectedPolygon(null);
+                    setSelectedVertex(null);
+                    setScale(1.0);
+                    setDragPosition([0.0, 0.0]);
+                  }}
+                >
+                  <NextImage
+                    className={styles.image}
+                    src={item.url}
+                    alt="Image uploaded"
+                    height={0}
+                    width={0}
+                  />
+                </li>
+              ))}
+            </ul>
           </Card>
         </div>
       </Card>

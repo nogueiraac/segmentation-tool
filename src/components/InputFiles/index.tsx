@@ -23,7 +23,8 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
           name: files[index].name,
           type: files[index].type,
           url: URL.createObjectURL(files[index]),
-          polygons: [],
+          height: 0,
+          width: 0,
         };
         aux.push(fileObj)
         setUploadedImages(uploadedImages.concat(aux));
@@ -36,7 +37,8 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
           name: files[index].name,
           type: files[index].type,
           url: URL.createObjectURL(files[index]),
-          polygons: [],
+          height: 0,
+          width: 0,
         };
         aux.push(fileObj)
         setUploadedImages(uploadedImages.concat(aux).slice(0, 10));
@@ -65,7 +67,8 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
         name: files[index].name,
         type: files[index].type,
         url: URL.createObjectURL(files[index]),
-        polygons: [],
+        height: 0,
+        width: 0,
       };
       aux.push(fileObj)
       setUploadedImages(uploadedImages.concat(aux));
