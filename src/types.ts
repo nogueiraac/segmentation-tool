@@ -11,13 +11,13 @@ export type Polygon = {
   id: number;
   urlImage: string;
   imageName: string;
+  imageId: string;
   created_at: Date;
 };
 
 export type Image = {
   id: string;
   name: string;
-  type: string;
   url: string;
   width: number;
   height: number;

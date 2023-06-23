@@ -20,7 +20,6 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
         const fileObj = {
           id: uuid(),
           name: files[index].name,
-          type: files[index].type,
           url: URL.createObjectURL(files[index]),
           height: 0,
           width: 0,
@@ -34,7 +33,6 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
         const fileObj = {
           id: uuid(),
           name: files[index].name,
-          type: files[index].type,
           url: URL.createObjectURL(files[index]),
           height: 0,
           width: 0,
@@ -63,7 +61,6 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
       const fileObj = {
         id: uuid(),
         name: files[index].name,
-        type: files[index].type,
         url: URL.createObjectURL(files[index]),
         height: 0,
         width: 0,

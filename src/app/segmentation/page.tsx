@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import NextImage from "next/image";
 import styles from "../styles/Segmentation.module.css";
 import UploadedImagesContext from "../../context/uploadedImages";
-import { Polygon, Image as ImageType } from "@/types";
+import { Polygon, Image as ImageType, Class } from "@/types";
 import ButtonsCard from "./buttonsCard";
 import Canvas from "./canvas";
 import CardsSection from "./cardsSection";
@@ -36,7 +36,6 @@ const Segmentation: NextPage = () => {
     height: 0,
     id: '',
     name: '',
-    type: '',
     url: '',
     width: 0,
   });
@@ -75,7 +74,7 @@ const Segmentation: NextPage = () => {
     if (uploadedImages.length > 0) {
       setSelectedImage(uploadedImages[0]);
     }
-  }, [uploadedImages]);
+  }, []);
 
   useEffect(() => {
     if (!selectedImage) return;
@@ -267,6 +266,7 @@ const Segmentation: NextPage = () => {
         id: polygons.length,
         urlImage: selectedImage?.url || "",
         imageName: selectedImage?.name || "",
+        imageId: selectedImage.id,
         created_at: new Date(),
       });
       setInDrawing(true);
@@ -292,18 +292,23 @@ const Segmentation: NextPage = () => {
 
   const saveCoordenates = () => {
     let aux: any[] = [];
-    polygons.forEach(({ imageName, points }) => {
-      aux = points.map((item: [number, number]) => {
-        return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: 1422, height: 800}, { width: 860.3100000000001, height: 484.0000000000001})
-      })
+    polygons.forEach(({ imageId, imageName, points }, index: number) => {
+      const teste = {
+        id_mask: index,
+        image_id: imageId,
+        segmentation: [points.map((item: [number, number]) => {
+          return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
+        })]
+      }
+      aux = [...aux, teste];
     });
-    const newPolygons = aux.flatMap((tupla: [number, number]) => tupla)
+    const annotations = aux.flatMap((tupla: [number, number]) => tupla);
     const data = {
       projectName: project.name,
       projectDescription: project.description,
-      newPolygons,
+      annotations: aux,
       images: uploadedImages,
-      classes: classes,
+      categories: classes.map((item: Class, index: number) => { return { id: index, name: item.name }}),
     };
     const coordenadas = JSON.stringify(data);
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(

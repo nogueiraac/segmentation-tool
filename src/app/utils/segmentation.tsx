@@ -115,7 +115,7 @@ export const calculateOriginalCoordinates = (
   const originalX = resizedImageCoordinates.x * xRatio;
   const originalY = resizedImageCoordinates.y * yRatio;
 
-  return [Math.floor(originalX), Math.floor(originalY)];
+  return Math.floor(originalX), Math.floor(originalY);
 };
 
 export const isPointInsidePolygon = (
