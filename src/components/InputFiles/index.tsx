@@ -3,7 +3,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import styles from "./styles.module.css";
 import UploadedImagesContext from '@/context/uploadedImages';
 import uuid from 'react-uuid';
-
+import { Image } from '@/types';
 interface InputFilesProps {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -14,11 +14,10 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
 
   const handleUploadFile = (event: any) => {
     const files: any[] = event.target.files;
-    const aux = [];
-    if (files.length < 10) {
+    const aux:Image[] = [];
       for (let index = 0; index < files.length; index += 1) {
         const fileObj = {
-          id: uuid(),
+          id: index,
           name: files[index].name,
           url: URL.createObjectURL(files[index]),
           height: 0,
@@ -27,21 +26,7 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
         aux.push(fileObj)
         setUploadedImages(uploadedImages.concat(aux));
       }
-    } else {
-      setVisible(true);
-      for (let index = 0; index < files.length; index += 1) {
-        const fileObj = {
-          id: uuid(),
-          name: files[index].name,
-          url: URL.createObjectURL(files[index]),
-          height: 0,
-          width: 0,
-        };
-        aux.push(fileObj)
-        setUploadedImages(uploadedImages.concat(aux).slice(0, 10));
-    }
   }
-}
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -56,10 +41,10 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
     e.preventDefault();
     setIsDragging(false);
     const files = e.dataTransfer.files;
-    const aux = [];
+    const aux: Image[] = [];
     for (let index = 0; index < files.length; index += 1) {
       const fileObj = {
-        id: uuid(),
+        id: index,
         name: files[index].name,
         url: URL.createObjectURL(files[index]),
         height: 0,

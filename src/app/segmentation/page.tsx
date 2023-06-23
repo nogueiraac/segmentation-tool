@@ -58,6 +58,16 @@ const Segmentation: NextPage = () => {
     return classColor;
   };
 
+  const className = (name: string) => {
+    const classObj = classes.find((option) => option?.name === name);
+    return classObj?.name
+  }
+
+  const classInfo = (key: 'id' | 'name'| 'color', value: string | number) => {
+    const aux = classes.find((item: Class) => item[key] === value);
+    return aux || classes[0];
+  }
+
   const [drawingStarted, setDrawingStarted] = useState(false);
   const [inDrawing, setInDrawing] = useState(false); // PERGUNTAR SE PRECISA DO IN DRAWING
   const [polygonInDrawing, setPolygonInDrawing] = useState<Polygon | null>(
@@ -262,7 +272,11 @@ const Segmentation: NextPage = () => {
         points: [[x, y]],
         color: classColor(polygonName),
         name: `${polygons.length + 1}-${polygonName}`,
-        class: polygonName,
+        class: {
+          name: classInfo("name", polygonName).name,
+          id: classInfo("name", polygonName).id,
+          color: classInfo("name", polygonName).color,
+        },
         id: polygons.length,
         urlImage: selectedImage?.url || "",
         imageName: selectedImage?.name || "",
@@ -291,22 +305,22 @@ const Segmentation: NextPage = () => {
   };
 
   const saveCoordenates = () => {
-    let aux: any[] = [];
-    polygons.forEach(({ imageId, imageName, points }, index: number) => {
-      const teste = {
-        id_mask: index,
+    let newPolygons: any[] = [];
+    polygons.forEach(({ imageId, imageName, points, class: actualClass }, index: number) => {
+      const polygon = {
+        id_mask: index + 1,
         image_id: imageId,
+        category_id: classInfo('id', actualClass.id).id,
         segmentation: [points.map((item: [number, number]) => {
           return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
         })]
       }
-      aux = [...aux, teste];
+      newPolygons = [...newPolygons, polygon];
     });
-    const annotations = aux.flatMap((tupla: [number, number]) => tupla);
     const data = {
       projectName: project.name,
       projectDescription: project.description,
-      annotations: aux,
+      annotations: newPolygons,
       images: uploadedImages,
       categories: classes.map((item: Class, index: number) => { return { id: index, name: item.name }}),
     };

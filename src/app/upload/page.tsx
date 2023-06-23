@@ -54,7 +54,7 @@ const Upload: NextPage = () => {
     e.preventDefault();
 
     if (inputValue.trim() !== '') {
-      setClasses([...classes, {name: inputValue, color: randomColorGenerator()}]);
+      setClasses([...classes, {name: inputValue, color: randomColorGenerator(), id: classes.length + 1 }]);
 
       formNewProject.resetFields(['classes'])
       setInputValue('');

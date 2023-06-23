@@ -1,4 +1,5 @@
 export type Class = {
+  id: number,
   name: string,
   color: string
 }
@@ -7,16 +8,16 @@ export type Polygon = {
   points: [number, number][];
   color: string;
   name: string;
-  class: string;
+  class: Class;
   id: number;
   urlImage: string;
   imageName: string;
-  imageId: string;
+  imageId: number;
   created_at: Date;
 };
 
 export type Image = {
-  id: string;
+  id: number;
   name: string;
   url: string;
   width: number;

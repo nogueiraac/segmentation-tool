@@ -58,7 +58,7 @@ const CardsSection = ({
     .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
     .forEach((polygon: Polygon) => {
       const polygonClass = polygon.class;
-      polygonGroups[polygonClass] = (polygonGroups[polygonClass] || 0) + 1;
+      polygonGroups[polygonClass.name] = (polygonGroups[polygonClass.name] || 0) + 1;
     });
 
   const contentList: Record<string, React.ReactNode> = {
@@ -92,8 +92,8 @@ const CardsSection = ({
               >
                 <Col style={{ float: "left" }} span={18}>
                   <Badge
-                    color={classColor(polygon.class)}
-                    text={polygon.class}
+                    color={classColor(polygon.name)}
+                    text={polygon.class.name}
                   />
                 </Col>
                 <Col style={{ float: "right" }} span={6}>
@@ -151,7 +151,7 @@ const CardsSection = ({
           <>
             <span>Name: {selectedPolygon.name}</span>
             <br />
-            <span>Class: {selectedPolygon.class}</span>
+            <span>Class: {selectedPolygon.class.name}</span>
             <br />
             <br />
             <span>
