@@ -109,13 +109,14 @@ export const calculateOriginalCoordinates = (
   image: { width: number; height: number },
   resizedImage: { width: number; height: number }
 ) => {
+  console.log(resizedImageCoordinates)
   const xRatio = image.width / resizedImage.width;
   const yRatio = image.height / resizedImage.height;
 
   const originalX = resizedImageCoordinates.x * xRatio;
   const originalY = resizedImageCoordinates.y * yRatio;
 
-  return Math.floor(originalX), Math.floor(originalY);
+  return [Math.floor(originalX), Math.floor(originalY)];
 };
 
 export const isPointInsidePolygon = (

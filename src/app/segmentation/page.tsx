@@ -313,7 +313,7 @@ const Segmentation: NextPage = () => {
         category_id: classInfo('id', actualClass.id).id,
         segmentation: [points.map((item: [number, number]) => {
           return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
-        })]
+        }).flatMap((coordItem) => coordItem)]
       }
       newPolygons = [...newPolygons, polygon];
     });
