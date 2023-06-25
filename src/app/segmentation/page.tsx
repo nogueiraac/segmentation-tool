@@ -23,6 +23,7 @@ import {
 import ProjectContext from "@/context/project";
 import ClassesContext from "@/context/classes";
 import PolygonsContext from "@/context/polygons";
+import { returnBbox } from "../utils/returnBbox";
 
 const Segmentation: NextPage = () => {
   const router = useRouter();
@@ -307,13 +308,15 @@ const Segmentation: NextPage = () => {
   const saveCoordenates = () => {
     let newPolygons: any[] = [];
     polygons.forEach(({ imageId, imageName, points, class: actualClass }, index: number) => {
+      const segmentation = [points.map((item: [number, number]) => {
+        return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
+      }).flatMap((coordItem) => coordItem)];
       const polygon = {
         id_mask: index + 1,
         image_id: imageId,
         category_id: classInfo('id', actualClass.id).id,
-        segmentation: [points.map((item: [number, number]) => {
-          return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
-        }).flatMap((coordItem) => coordItem)]
+        segmentation,
+        bbox: returnBbox(segmentation[0]),
       }
       newPolygons = [...newPolygons, polygon];
     });
