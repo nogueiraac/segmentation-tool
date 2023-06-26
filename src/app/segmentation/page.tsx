@@ -35,7 +35,7 @@ const Segmentation: NextPage = () => {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [selectedImage, setSelectedImage] = useState<ImageType>({
     height: 0,
-    id: '',
+    id: 0,
     name: '',
     url: '',
     width: 0,
