@@ -18,7 +18,7 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
       for (let index = 0; index < files.length; index += 1) {
         const fileObj = {
           id: index,
-          name: files[index].name,
+          file_name: files[index].name,
           url: URL.createObjectURL(files[index]),
           height: 0,
           width: 0,
@@ -45,7 +45,7 @@ const InputFiles = ({ setVisible }: InputFilesProps) => {
     for (let index = 0; index < files.length; index += 1) {
       const fileObj = {
         id: index,
-        name: files[index].name,
+        file_name: files[index].name,
         url: URL.createObjectURL(files[index]),
         height: 0,
         width: 0,

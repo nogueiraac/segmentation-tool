@@ -18,7 +18,7 @@ export type Polygon = {
 
 export type Image = {
   id: number;
-  name: string;
+  file_name: string;
   url: string;
   width: number;
   height: number;

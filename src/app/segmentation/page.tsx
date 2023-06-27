@@ -36,7 +36,7 @@ const Segmentation: NextPage = () => {
   const [selectedImage, setSelectedImage] = useState<ImageType>({
     height: 0,
     id: 0,
-    name: '',
+    file_name: '',
     url: '',
     width: 0,
   });
@@ -99,7 +99,7 @@ const Segmentation: NextPage = () => {
       setNewImageProportion((prevNewImageProportion) => [
         ...prevNewImageProportion,
         {
-          imageName: selectedImage.name,
+          imageName: selectedImage.file_name,
           qtd: qtd,
         },
       ]);
@@ -114,7 +114,7 @@ const Segmentation: NextPage = () => {
   useEffect(() => {
     if(image) {
       let teste = uploadedImages.map((item: ImageType) => {
-        if(item.name === selectedImage.name) {
+        if(item.file_name === selectedImage.file_name) {
           item.height = image.height
           item.width = image.width;
 
@@ -236,7 +236,7 @@ const Segmentation: NextPage = () => {
       let vertexIsSelected = false;
 
       polygons
-        .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
+        .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
         .forEach((polygon) => {
           const a = isPointInsideVertex(
             x / scale - dragPosition[0],
@@ -280,7 +280,7 @@ const Segmentation: NextPage = () => {
         },
         id: polygons.length,
         urlImage: selectedImage?.url || "",
-        imageName: selectedImage?.name || "",
+        imageName: selectedImage?.file_name || "",
         imageId: selectedImage.id,
         created_at: new Date(),
       });
@@ -379,7 +379,7 @@ const Segmentation: NextPage = () => {
     if (!selectedVertex) return;
 
     polygons
-      .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
+      .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
       .filter((polygon: Polygon) => polygon.id === selectedVertex.polygonId)
       .forEach(({ points }) => {
         setPolygons;
@@ -610,7 +610,7 @@ const Segmentation: NextPage = () => {
         </div>
         <div>
           <Card
-            title={`Images List • ${selectedImage?.name}`}
+            title={`Images List • ${selectedImage?.file_name}`}
             className={styles.imagesCard}
           >
             <ul className={styles.imagesList}>

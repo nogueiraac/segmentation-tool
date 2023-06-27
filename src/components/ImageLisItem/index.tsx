@@ -18,12 +18,12 @@ export default function ImageListITem({ item, onRemove }: ImageListItemProps) {
         <div className={styles.cardLeftContent}>
           <Image
             className={styles.image}
-            alt={item.name}
+            alt={item.file_name}
             width={50}
             height={50}
             src={item.url}
           />
-          {item.name}
+          {item.file_name}
         </div>
         <Button
           onClick={() => onRemove(item)}
