@@ -55,7 +55,7 @@ const CardsSection = ({
 
   const polygonGroups: { [key: string]: number } = {};
   polygons
-    .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
+    .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
     .forEach((polygon: Polygon) => {
       const polygonClass = polygon.class;
       polygonGroups[polygonClass.name] = (polygonGroups[polygonClass.name] || 0) + 1;
@@ -83,7 +83,7 @@ const CardsSection = ({
       polygons.length > 0 ? (
         <Row gutter={[16, 12]}>
           {polygons
-            .filter((polygon: Polygon) => polygon.imageName === selectedImage?.name)
+            .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
             .map((polygon: Polygon) => (
               <div
                 key={polygon.id}
