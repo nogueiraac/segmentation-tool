@@ -12,7 +12,7 @@ import {
   UndoOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { Card, Space, Button } from "antd";
+import { Card, Space, Button, Tooltip } from "antd";
 
 import styles from "../styles/Segmentation.module.css";
 
@@ -61,110 +61,130 @@ const ButtonsCard = ({
 }: ButtonsCardProps) => {
   return (
     <div>
-      <div style={{ display: "inline-block", marginRight: '16px' }}>
-        <Card className={styles.card_tools} size="small">
-          <Space direction="vertical" align="center" size={"middle"}>
-            <Button
-              type="primary"
-              danger
-              onClick={handleUndoPointClick}
-              icon={<UndoOutlined />}
-              disabled={!inDrawing}
-            ></Button>
-            <Button
-              type="primary"
-              danger
-              onClick={handlePointPolygonButtonClick}
-              icon={<DeleteOutlined />}
-              disabled={
-                inDrawing || selectedVertex === null || movingVertex === true
-              }
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleMovingVertexButtonClick}
-              icon={<EditOutlined />}
-              disabled={
-                inDrawing || selectedVertex === null || movingVertex === true
-              }
-            ></Button>
-          </Space>
-        </Card>
-      </div>
       <div style={{ display: "inline-block" }}>
-        <Card className={styles.card_tools} size="small">
+        <Card title='Actions' className={styles.card_tools} size="small">
           <Space direction="vertical" align="center" size={"middle"}>
-            <Button
-              type="primary"
-              onClick={handleStartButtonClick}
-              icon={<CaretRightOutlined />}
-              disabled={inDrawing || drawingStarted || movingVertex === true}
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleFinishButtonClick}
-              icon={<PauseOutlined />}
-              disabled={
-                !inDrawing ||
-                (polygonInDrawing?.points.length != undefined &&
-                  polygonInDrawing?.points.length < 3)
-              }
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleZoomIn}
-              icon={<ZoomInOutlined />}
-              disabled={inDrawing || movingVertex === true}
-              // disabled={true}
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleZoomOut}
-              icon={<ZoomOutOutlined />}
-              disabled={inDrawing || movingVertex === true}
-              // disabled={true}
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleDragUp}
-              icon={<UpCircleOutlined />}
-              disabled={inDrawing || movingVertex === true}
-              // disabled={true}
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleDragDown}
-              icon={<DownCircleOutlined />}
-              disabled={inDrawing || movingVertex === true}
-              // disabled={true}
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleDragLeft}
-              icon={<LeftCircleOutlined />}
-              disabled={inDrawing || movingVertex === true}
-              // disabled={true}
-            ></Button>
-            <Button
-              type="primary"
-              onClick={handleDragRight}
-              icon={<RightCircleOutlined />}
-              disabled={inDrawing || movingVertex === true}
-              // disabled={true}
-            ></Button>
-            <Button
-              type="primary"
-              danger
-              onClick={handleDeletePolygonButtonClick}
-              icon={<DeleteOutlined />}
-              disabled={inDrawing || selectedPolygon === null}
-            ></Button>
-            <Button
-              type="primary"
-              onClick={saveCoordenates}
-              icon={<ExportOutlined />}
-              disabled={inDrawing || movingVertex === true}
-            ></Button>
+            <Tooltip placement='left' title='start segmentation'>
+              <Button
+                type="primary"
+                danger
+                onClick={handleUndoPointClick}
+                icon={<UndoOutlined />}
+                disabled={!inDrawing}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='delete point'>
+              <Button
+                type="primary"
+                danger
+                onClick={handlePointPolygonButtonClick}
+                icon={<DeleteOutlined />}
+                disabled={
+                  inDrawing || selectedVertex === null || movingVertex === true
+                }
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='edit selected point'>
+              <Button
+                type="primary"
+                onClick={handleMovingVertexButtonClick}
+                icon={<EditOutlined />}
+                disabled={
+                  inDrawing || selectedVertex === null || movingVertex === true
+                }
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='start segmentation'>
+              <Button
+                type="primary"
+                onClick={handleStartButtonClick}
+                icon={<CaretRightOutlined />}
+                disabled={inDrawing || drawingStarted || movingVertex === true}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Finish polygon'>
+              <Button
+                type="primary"
+                onClick={handleFinishButtonClick}
+                icon={<PauseOutlined />}
+                disabled={
+                  !inDrawing ||
+                  (polygonInDrawing?.points.length != undefined &&
+                    polygonInDrawing?.points.length < 3)
+                }
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Zoom in'>
+              <Button
+                type="primary"
+                onClick={handleZoomIn}
+                icon={<ZoomInOutlined />}
+                disabled={inDrawing || movingVertex === true}
+                // disabled={true}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Zoom out'>
+              <Button
+                type="primary"
+                onClick={handleZoomOut}
+                icon={<ZoomOutOutlined />}
+                disabled={inDrawing || movingVertex === true}
+                // disabled={true}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Move up'>
+              <Button
+                type="primary"
+                onClick={handleDragUp}
+                icon={<UpCircleOutlined />}
+                disabled={inDrawing || movingVertex === true}
+                // disabled={true}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Move down'>
+              <Button
+                type="primary"
+                onClick={handleDragDown}
+                icon={<DownCircleOutlined />}
+                disabled={inDrawing || movingVertex === true}
+                // disabled={true}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Move left'>
+              <Button
+                type="primary"
+                onClick={handleDragLeft}
+                icon={<LeftCircleOutlined />}
+                disabled={inDrawing || movingVertex === true}
+                // disabled={true}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Move right'>
+              <Button
+                type="primary"
+                onClick={handleDragRight}
+                icon={<RightCircleOutlined />}
+                disabled={inDrawing || movingVertex === true}
+                // disabled={true}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='delete selected polygon'>
+              <Button
+                type="primary"
+                danger
+                onClick={handleDeletePolygonButtonClick}
+                icon={<DeleteOutlined />}
+                disabled={inDrawing || selectedPolygon === null}
+              />
+            </Tooltip>
+            <Tooltip placement='left' title='Export JSON'>
+              <Button
+                type="primary"
+                onClick={saveCoordenates}
+                icon={<ExportOutlined />}
+                disabled={inDrawing || movingVertex === true}
+              />
+            </Tooltip>
           </Space>
         </Card>
       </div>
