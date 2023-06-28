@@ -1,6 +1,6 @@
 'use client';
 import React, { useContext, useEffect, useState } from "react";
-import { Card, Form, Input, Button, Modal } from "antd";
+import { Card, Form, Input, Button, Modal, message } from "antd";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { UploadOutlined } from '@ant-design/icons';
@@ -13,7 +13,7 @@ import ClassesContext from "@/context/classes";
 import ClassesItem from "@/components/ClassesItem";
 import ProjectContext from "@/context/project";
 import { randomColorGenerator } from "../utils/randomColorGenerator";
-import { Class } from "@/types";
+import { Class, Image } from "@/types";
 import PolygonsContext from "@/context/polygons";
 
 const Upload: NextPage = () => {
@@ -43,11 +43,13 @@ const Upload: NextPage = () => {
       router.push("/segmentation");
   };
 
-  const onRemove = (item: any) => {
+  const onRemove = (item: Image) => {
+    console.log(item);
     const newArray = uploadedImages.filter(
-      (image: any) => image.name !== item.name
+      (image: Image) => image.file_name !== item.file_name
     );
     setUploadedImages(newArray);
+    message.success(`Image ${item.file_name} removed with successful`);
   };
 
   const handleInputEnter = (e: any) => {
@@ -66,6 +68,7 @@ const Upload: NextPage = () => {
       (classItem: Class) => classItem.name !== item
     );
     setClasses(newClasses);
+    message.success(`Class '${item}' removed with successful`);
   }
 
   const handleFileChange = (event: any) => {
@@ -155,7 +158,7 @@ const Upload: NextPage = () => {
               key={2}
               type="primary"
               onClick={onUpload}
-              disabled={uploadedImages?.length <= 0}
+              disabled={uploadedImages?.length <= 0 && classes.length <= 0}
             >
               Create Project
             </Button>
