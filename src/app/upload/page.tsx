@@ -147,18 +147,10 @@ const Upload: NextPage = () => {
           </div>
           <div className={styles.buttons}>
             <Button
-              key={1}
-              htmlType="button"
-              onClick={onReset}
-              style={{ marginRight: "8px" }}
-            >
-              Reset
-            </Button>
-            <Button
               key={2}
               type="primary"
               onClick={onUpload}
-              disabled={uploadedImages?.length <= 0 && classes.length <= 0}
+              disabled={!(uploadedImages?.length > 0 && classes.length > 0)}
             >
               Create Project
             </Button>
