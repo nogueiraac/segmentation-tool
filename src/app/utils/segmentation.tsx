@@ -62,7 +62,7 @@ export function drawPolygons(
   ctx: CanvasRenderingContext2D
 ) {
   polygons
-    .filter((polygon: Polygon) => polygon.imageName === selectedImage.name)
+    .filter((polygon: Polygon) => polygon.imageName === selectedImage.file_name)
     .forEach(({ points, color, id }) => {
       drawEdges(selectedPolygon, id, points, color, ctx);
       drawVertices(selectedVertex, id, points, color, ctx);
@@ -109,7 +109,6 @@ export const calculateOriginalCoordinates = (
   image: { width: number; height: number },
   resizedImage: { width: number; height: number }
 ) => {
-  console.log(resizedImageCoordinates)
   const xRatio = image.width / resizedImage.width;
   const yRatio = image.height / resizedImage.height;
 
