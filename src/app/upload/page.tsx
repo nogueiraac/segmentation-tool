@@ -20,7 +20,6 @@ const Upload: NextPage = () => {
   const router = useRouter();
   const { TextArea } = Input;
   const [formNewProject] = Form.useForm();
-  const [visible, setVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState('');
   const [json, setJson] = useState<any>();
   const { uploadedImages, setUploadedImages } = useContext(UploadedImagesContext);
@@ -135,7 +134,7 @@ const Upload: NextPage = () => {
               </li>
             ))}
           </ul>
-          <InputFiles setVisible={setVisible} />
+          <InputFiles />
           <div style={{ display: 'flex', width: '100%' }}>
             <ul className={styles.imagesList}>
               {uploadedImages?.map((item) => (

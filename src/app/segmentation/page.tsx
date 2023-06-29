@@ -620,7 +620,7 @@ const Segmentation: NextPage = () => {
                   key={item.id}
                   style={{
                     border:
-                      selectedImage?.id === item.id ? "3px solid black" : "",
+                      selectedImage?.id === item.id ? "3px solid #1677ff" : "",
                   }}
                   onClick={() => {
                     setSelectedImage(item);

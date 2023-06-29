@@ -4,11 +4,8 @@ import styles from "./styles.module.css";
 import UploadedImagesContext from '@/context/uploadedImages';
 import uuid from 'react-uuid';
 import { Image } from '@/types';
-interface InputFilesProps {
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-const InputFiles = ({ setVisible }: InputFilesProps) => {
+const InputFiles = () => {
   const { uploadedImages, setUploadedImages } = useContext(UploadedImagesContext);
   const [isDragging, setIsDragging] = useState(false);
 
