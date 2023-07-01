@@ -118,6 +118,20 @@ export const calculateOriginalCoordinates = (
   return [Math.floor(originalX), Math.floor(originalY)];
 };
 
+export const calculateResizedCoordinates = (
+  originalImageCoordinates: { x: number; y: number },
+  image: { width: number; height: number },
+  resizedImage: { width: number; height: number }
+) => {
+  const xRatio = resizedImage.width / image.width;
+  const yRatio = resizedImage.height / image.height;
+
+  const resizedX = originalImageCoordinates.x * xRatio;
+  const resizedY = originalImageCoordinates.y * yRatio;
+
+  return [Math.floor(resizedX), Math.floor(resizedY)];
+};
+
 export const isPointInsidePolygon = (
   x: number,
   y: number,

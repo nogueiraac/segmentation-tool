@@ -19,6 +19,7 @@ import {
   isPointInsidePolygon,
   isPointInsideVertex,
   calculateOriginalCoordinates,
+  calculateResizedCoordinates,
 } from "../utils/segmentation";
 import ProjectContext from "@/context/project";
 import ClassesContext from "@/context/classes";
@@ -82,10 +83,31 @@ const Segmentation: NextPage = () => {
   const [newImageProportion, setNewImageProportion] = useState<any[]>([]);
 
   useEffect(() => {
+    if (classes.length < 1 || uploadedImages.length < 1) {
+      router.push('/upload');
+    }
+  })
+
+
+  useEffect(() => {
     if (uploadedImages.length > 0) {
       setSelectedImage(uploadedImages[0]);
     }
   }, []);
+
+  useEffect(() => {
+    if (image) {
+      let newPolygons: Polygon[] = [];
+      polygons.forEach((item: Polygon) => {
+        const segmentation = item.points.map((item: any) => {
+          return calculateResizedCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
+        })
+        const newPolygon: Polygon = { ...item, points: segmentation as [number, number][]}
+        newPolygons = [...newPolygons, newPolygon]
+      })
+      setPolygons(newPolygons);
+    }
+  }, [image])
 
   useEffect(() => {
     if (!selectedImage) return;
@@ -325,7 +347,7 @@ const Segmentation: NextPage = () => {
       projectDescription: project.description,
       annotations: newPolygons,
       images: uploadedImages,
-      categories: classes.map((item: Class, index: number) => { return { id: index, name: item.name }}),
+      categories: classes.map((item: Class) => { return { id: item.id, name: item.name }}),
     };
     const coordenadas = JSON.stringify(data);
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(

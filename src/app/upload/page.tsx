@@ -15,6 +15,7 @@ import ProjectContext from "@/context/project";
 import { randomColorGenerator } from "../utils/randomColorGenerator";
 import { Class, Image } from "@/types";
 import PolygonsContext from "@/context/polygons";
+import { converterJSON } from "../utils/convertInputObject";
 
 const Upload: NextPage = () => {
   const router = useRouter();
@@ -43,7 +44,6 @@ const Upload: NextPage = () => {
   };
 
   const onRemove = (item: Image) => {
-    console.log(item);
     const newArray = uploadedImages.filter(
       (image: Image) => image.file_name !== item.file_name
     );
@@ -91,8 +91,19 @@ const Upload: NextPage = () => {
 
   useEffect(() => {
     if (json) {
-      setClasses(json.classes);
-      setPolygons(json.polygons);
+      const teste = converterJSON(json);
+      let aux: any = null;
+      if (typeof teste === 'string') {
+        try {
+          const parsedData = JSON.parse(teste);
+          aux = parsedData;
+        } catch (error) {
+          console.error('Error parsing JSON file:', error);
+        }
+      }
+      console.log(aux.polygons);
+      setClasses(aux?.classes);
+      setPolygons(aux?.polygons);
     }
   }, [json, setClasses, setPolygons])
 
