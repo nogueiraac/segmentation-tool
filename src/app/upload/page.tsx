@@ -1,6 +1,6 @@
 'use client';
 import React, { useContext, useEffect, useState } from "react";
-import { Card, Form, Input, Button, Modal, message } from "antd";
+import { Card, Form, Input, Button, Modal, message, Typography } from "antd";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { UploadOutlined } from '@ant-design/icons';
@@ -101,7 +101,6 @@ const Upload: NextPage = () => {
           console.error('Error parsing JSON file:', error);
         }
       }
-      console.log(aux.polygons);
       setClasses(aux?.classes);
       setPolygons(aux?.polygons);
     }
@@ -116,18 +115,10 @@ const Upload: NextPage = () => {
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Card className={styles.card_ant}>
         <Form form={formNewProject} layout="vertical">
-          <Form.Item label="Name" name="nameProject" required>
-            <Input placeholder="Name" value={project.name} required></Input>
-          </Form.Item>
-          <Form.Item label="Description" name="descriptionProject">
-            <TextArea
-              rows={4}
-              placeholder="Define a brief description if necessary."
-            />
-          </Form.Item>
+          <Typography>Enter the classes via text field or send a json</Typography>
           <Form.Item label="Classes" name="classes">
             <Input 
-              placeholder="Classes" 
+              placeholder="Example: Alita" 
               disabled={json}
               value={inputValue} 
               onChange={(e) => setInputValue(e.target.value)}
@@ -146,7 +137,7 @@ const Upload: NextPage = () => {
             ))}
           </ul>
           <InputFiles />
-          <div style={{ display: 'flex', width: '100%' }}>
+          <div style={{ display: 'flex', width: '100%', height: '350px', overflowY: 'scroll', marginTop: '24px' }}>
             <ul className={styles.imagesList}>
               {uploadedImages?.map((item) => (
                 <li key={item.id}>

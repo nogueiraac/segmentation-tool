@@ -57,24 +57,28 @@ const CardsSection = ({
   polygons
     .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
     .forEach((polygon: Polygon) => {
-      const polygonClass = polygon.class;
-      polygonGroups[polygonClass.name] = (polygonGroups[polygonClass.name] || 0) + 1;
+      const polygonClass = polygon.class as unknown as string;
+      polygonGroups[polygonClass] = (polygonGroups[polygonClass] || 0) + 1;
     });
 
   const contentList: Record<string, React.ReactNode> = {
     classes:
       polygons.length > 0 ? (
         <Row gutter={[16, 12]}>
-          {Object.keys(polygonGroups).map((polygonClass) => (
-            <>
-              <Col style={{ float: "left" }} span={18}>
-                <Badge color={classColor(polygonClass)} text={polygonClass} />
-              </Col>
-              <Col style={{ float: "right" }} span={6}>
-                <Tag color="blue">{polygonGroups[polygonClass]}</Tag>
-              </Col>
-            </>
-          ))}
+          {
+            Object.keys(polygonGroups).map((polygonClass, index) => {
+              return (
+                <div key={`${polygonClass}-${index}`}>
+                  <Col style={{ float: "left" }} span={18}>
+                    <Badge color={classColor(polygonClass)} text={polygonClass} />
+                  </Col>
+                  <Col style={{ float: "right" }} span={6}>
+                    <Tag color="blue">{polygonGroups[polygonClass]}</Tag>
+                  </Col>
+                </div>
+              )
+            })
+          }
         </Row>
       ) : (
         <span>No segmented classes</span>
@@ -93,7 +97,7 @@ const CardsSection = ({
                 <Col style={{ float: "left" }} span={18}>
                   <Badge
                     color={classColor(polygon.name)}
-                    text={polygon.class.name}
+                    text={polygon.class as unknown as string}
                   />
                 </Col>
                 <Col style={{ float: "right" }} span={6}>
@@ -151,7 +155,7 @@ const CardsSection = ({
           <>
             <span>Name: {selectedPolygon.name}</span>
             <br />
-            <span>Class: {selectedPolygon.class.name}</span>
+            <span>Class: {selectedPolygon.class}</span>
             <br />
             <br />
             <span>

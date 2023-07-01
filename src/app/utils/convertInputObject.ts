@@ -15,7 +15,7 @@ const setCoordenates = (points: number[][]) => {
   const arrayDeTuplas = points.flatMap((elemento) => {
     const tuplas = [];
     for (let i = 0; i < elemento.length - 1; i += 2) {
-      tuplas.push([elemento[i] - 1, elemento[i + 1] - 1]);
+      tuplas.push([elemento[i], elemento[i + 1]]);
     }
     return tuplas;
   });
@@ -40,7 +40,8 @@ export function converterJSON(jsonEntrada: any) {
       id: annotation.id_mask,
       idImage: annotation.image_id,
       imageName: getImage(jsonEntrada.images, annotation.image_id).file_name,
-      created_at: new Date()
+      created_at: new Date(),
+      resized: false,
     };
     jsonSaida.polygons.push(poligono);
   });

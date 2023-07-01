@@ -8,12 +8,13 @@ export type Polygon = {
   points: [number, number][];
   color: string;
   name: string;
-  class: Class;
+  class: string;
   id: number;
   urlImage: string;
   imageName: string;
   imageId: number;
   created_at: Date;
+  resized: boolean;
 };
 
 export type Image = {
