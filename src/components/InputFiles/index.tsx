@@ -65,7 +65,7 @@ const InputFiles = () => {
       <p className="ant-upload-text">
         Click or drag file image to this area to upload.
       </p>
-      <input id="input" type="file" onChange={handleUploadFile} multiple style={{ display: 'none'}} />
+      <input id="input" accept='.jpg, .jpeg' type="file" onChange={handleUploadFile} multiple style={{ display: 'none'}} />
     </div>
   )
 }

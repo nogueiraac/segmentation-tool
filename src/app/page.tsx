@@ -125,8 +125,8 @@ export default function Home() {
               onPressEnter={handleInputEnter}
             ></Input>
           </Form.Item>
-            <Form.Item label="Insert classes and masks via JSON">
-              <input id="inputJson" type="file" onChange={handleFileChange} style={{ display: 'none'}} hidden />
+            <Form.Item label="Insert classes and polygons via JSON">
+              <input id="inputJson" type="file" accept=".json" onChange={handleFileChange} style={{ display: 'none'}} hidden />
               <Button onClick={() => document.getElementById('inputJson')?.click()} icon={<UploadOutlined />}> Upload Json </Button>
             </Form.Item>
           <ul style={{ listStyle: 'none', marginBottom: '16px', display: 'flex', gap: '8px'}}>
