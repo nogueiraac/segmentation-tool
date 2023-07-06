@@ -64,43 +64,43 @@ const CardsSection = ({
   const contentList: Record<string, React.ReactNode> = {
     classes:
       polygons.length > 0 ? (
-        <Row gutter={[16, 12]}>
+        <div>
           {
             Object.keys(polygonGroups).map((polygonClass, index) => {
               return (
-                <div key={`${polygonClass}-${index}`}>
-                  <Col style={{ float: "left" }} span={18}>
+                <div key={`${polygonClass}-${index}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row'}}>
+                  <div>
                     <Badge color={classColor(polygonClass)} text={polygonClass} />
-                  </Col>
-                  <Col style={{ float: "right" }} span={6}>
+                  </div>
+                  <div>
                     <Tag color="blue">{polygonGroups[polygonClass]}</Tag>
-                  </Col>
+                  </div>
                 </div>
               )
             })
           }
-        </Row>
+        </div>
       ) : (
         <span>No segmented classes</span>
       ),
     annotations:
       polygons.length > 0 ? (
-        <Row gutter={[16, 12]}>
+        <div>
           {polygons
             .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
             .map((polygon: Polygon) => (
               <div
                 key={polygon.id}
                 onClick={() => setSelectedPolygon(polygon)}
-                style={{ cursor: "pointer", display: "flex", width: "100%" }}
+                style={{ cursor: "pointer", display: "flex", width: "100%", alignItems: 'center', justifyContent: 'space-between', }}
               >
-                <Col style={{ float: "left" }} span={18}>
+                <div style={{ float: "left" }}>
                   <Badge
                     color={classColor(polygon.name)}
                     text={polygon.class as unknown as string}
                   />
-                </Col>
-                <Col style={{ float: "right" }} span={6}>
+                </div>
+                <div>
                   <Button
                     onClick={() => onRemove(polygon)}
                     size="small"
@@ -108,10 +108,10 @@ const CardsSection = ({
                     icon={<DeleteOutlined rev={undefined} />}
                     danger
                   />
-                </Col>
+                </div>
               </div>
             ))}
-        </Row>
+        </div>
       ) : (
         <span>No segmented classes</span>
       ),

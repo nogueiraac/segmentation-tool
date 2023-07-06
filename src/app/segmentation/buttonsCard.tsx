@@ -64,7 +64,7 @@ const ButtonsCard = ({
       <div style={{ display: "inline-block" }}>
         <Card title='Actions' className={styles.card_tools} size="small">
           <Space direction="vertical" align="center" size={"middle"}>
-            <Tooltip placement='left' title='start segmentation'>
+            <Tooltip placement='left' title='Start segmentation'>
               <Button
                 type="primary"
                 danger
@@ -73,7 +73,7 @@ const ButtonsCard = ({
                 disabled={!inDrawing}
               />
             </Tooltip>
-            <Tooltip placement='left' title='delete point'>
+            <Tooltip placement='left' title='Delete point'>
               <Button
                 type="primary"
                 danger
@@ -84,7 +84,7 @@ const ButtonsCard = ({
                 }
               />
             </Tooltip>
-            <Tooltip placement='left' title='edit selected point'>
+            <Tooltip placement='left' title='Edit selected point'>
               <Button
                 type="primary"
                 onClick={handleMovingVertexButtonClick}
@@ -94,7 +94,7 @@ const ButtonsCard = ({
                 }
               />
             </Tooltip>
-            <Tooltip placement='left' title='start segmentation'>
+            <Tooltip placement='left' title='Start segmentation'>
               <Button
                 type="primary"
                 onClick={handleStartButtonClick}
@@ -168,7 +168,7 @@ const ButtonsCard = ({
                 // disabled={true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='delete selected polygon'>
+            <Tooltip placement='left' title='Delete selected polygon'>
               <Button
                 type="primary"
                 danger

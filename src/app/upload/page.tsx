@@ -125,11 +125,12 @@ const Upload: NextPage = () => {
               onPressEnter={handleInputEnter}
             ></Input>
           </Form.Item>
-            <Form.Item label="Upload Json">
+            <Form.Item label="Insert classes and masks via JSON">
               <input id="inputJson" type="file" onChange={handleFileChange} style={{ display: 'none'}} hidden />
               <Button onClick={() => document.getElementById('inputJson')?.click()} icon={<UploadOutlined />}> Upload Json </Button>
             </Form.Item>
-          <ul style={{ listStyle: 'none', marginBottom: '16px', display: 'flex'}}>
+          <ul style={{ listStyle: 'none', marginBottom: '16px', display: 'flex', gap: '8px'}}>
+            <Typography>Classes List:</Typography>
             {classes.map((item: Class) => (
               <li key={item.name} style={{ marginBottom: '8px' }}>
                 <ClassesItem content={item.name} onRemoveClass={onRemoveClass} />
@@ -137,7 +138,7 @@ const Upload: NextPage = () => {
             ))}
           </ul>
           <InputFiles />
-          <div style={{ display: 'flex', width: '100%', height: '350px', overflowY: 'scroll', marginTop: '24px' }}>
+          <div style={{ display: 'flex', width: '100%', maxHeight: '350px', overflowY: 'scroll', marginTop: '24px' }}>
             <ul className={styles.imagesList}>
               {uploadedImages?.map((item) => (
                 <li key={item.id}>

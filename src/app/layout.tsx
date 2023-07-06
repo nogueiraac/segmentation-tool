@@ -23,7 +23,7 @@ export default function RootLayout({
           <ClassesProvider>
             <UploadedImagesProvider>
               <PolygonsProvider>
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', padding: '32px' }}>
+                <div style={{ width: '100%', display: 'flex', alignItems: 'center', padding: '32px' }}>
                   {children}
                 </div>
               </PolygonsProvider>

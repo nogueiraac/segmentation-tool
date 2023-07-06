@@ -46,26 +46,20 @@ const Segmentation: NextPage = () => {
   const { polygons, setPolygons } = useContext(PolygonsContext);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
   const [polygonName, setPolygonName] = useState<string>(classes[0]?.name);
-
   const [selectedVertex, setSelectedVertex] = useState<{
     polygonId: number;
     vertexIndex: number;
   } | null>(null);
 
   const [movingVertex, setMovingVertex] = useState(false);
-
+  
   const classColor = (className: string) => {
     const classObj = classes.find((option) => option?.name === className);
     const classColor = classObj ? classObj.color : "#000000";
     return classColor;
   };
 
-  const className = (name: string) => {
-    const classObj = classes.find((option) => option?.name === name);
-    return classObj?.name
-  }
-
-  const classInfo = (key: 'id' | 'name'| 'color', value: string | number) => {
+  const classInfo = (key: 'name', value: string | number) => {
     const aux = classes.find((item: Class) => item[key] === value);
     return aux || classes[0];
   }
@@ -80,11 +74,10 @@ const Segmentation: NextPage = () => {
   const [dragPosition, setDragPosition] = useState([0.0, 0.0]);
 
   const initialCanvas = { width: 800, height: 400 };
-  const [newImageProportion, setNewImageProportion] = useState<any[]>([]);
 
   useEffect(() => {
     if (classes.length < 1 || uploadedImages.length < 1) {
-      router.push('/upload');
+      router.push('/');
     }
   })
 
@@ -96,18 +89,23 @@ const Segmentation: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (image) {
-      let newPolygons: Polygon[] = [];
-      polygons.forEach((item: Polygon) => {
-        const segmentation = item.points.map((item: any) => {
-          return calculateResizedCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
-        })
-        const newPolygon: Polygon = { ...item, points: segmentation as [number, number][]}
-        newPolygons = [...newPolygons, newPolygon]
+    let aux: number[][] = [];
+    let auxPolygon: Polygon;
+    console.log('teste');
+    if (selectedImage && image) {
+      polygons.forEach((polygon) => {
+        if (polygon.resized === false) {
+          aux = polygon.points.map((item) => {
+            return calculateResizedCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
+          })
+          auxPolygon = {... polygon, points: aux as unknown as [number, number][], resized: true}
+          setPolygons([auxPolygon]);
+
+          /* terminar de implementar logica*/
+        }
       })
-      setPolygons(newPolygons);
     }
-  }, [image])
+  }, [selectedImage, image]);
 
   useEffect(() => {
     if (!selectedImage) return;
@@ -118,14 +116,6 @@ const Segmentation: NextPage = () => {
 
       setImage(img);
       const { width, height, qtd } = resizeImage(img, initialCanvas);
-      setNewImageProportion((prevNewImageProportion) => [
-        ...prevNewImageProportion,
-        {
-          imageName: selectedImage.file_name,
-          qtd: qtd,
-        },
-      ]);
-
       canvasRef.current.width = width;
       canvasRef.current.height = height;
     };
@@ -295,16 +285,13 @@ const Segmentation: NextPage = () => {
         points: [[x, y]],
         color: classColor(polygonName),
         name: `${polygons.length + 1}-${polygonName}`,
-        class: {
-          name: classInfo("name", polygonName).name,
-          id: classInfo("name", polygonName).id,
-          color: classInfo("name", polygonName).color,
-        },
-        id: polygons.length,
+        class: polygonName,
+        id: polygons.length + 1,
         urlImage: selectedImage?.url || "",
         imageName: selectedImage?.file_name || "",
         imageId: selectedImage.id,
         created_at: new Date(),
+        resized: true,
       });
       setInDrawing(true);
     } else {
@@ -336,7 +323,7 @@ const Segmentation: NextPage = () => {
       const polygon = {
         id_mask: index + 1,
         image_id: imageId,
-        category_id: classInfo('id', actualClass.id).id,
+        category_id: classInfo('name', actualClass).id,
         segmentation,
         bbox: returnBbox(segmentation[0]),
       }
