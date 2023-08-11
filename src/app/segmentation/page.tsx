@@ -184,7 +184,7 @@ const Segmentation: NextPage = () => {
       const { x, y } = getMousePosition(event);
       let cursorOverPolygon = false;
       polygons
-        .filter((polygon: Polygon) => polygon.imageName === selectedImage.name)
+        .filter((polygon: Polygon) => polygon.imageName === selectedImage.file_name)
         .forEach(({ points }) => {
           const a = isPointInsideVertex(
             x / scale - dragPosition[0],
