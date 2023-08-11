@@ -230,12 +230,26 @@ const Segmentation: NextPage = () => {
       setPolygons((prevPolygons) => {
         const { polygonId, vertexIndex } = selectedVertex;
         const updatedPolygons = [...prevPolygons];
-        const updatedPoints = [...updatedPolygons[polygonId].points];
-        updatedPoints[vertexIndex] = [x, y];
-        updatedPolygons[polygonId] = {
-          ...updatedPolygons[polygonId],
-          points: updatedPoints,
-        };
+
+        // Encontra o índice do polígono com base no nome
+        const polygonIndex = updatedPolygons.findIndex(
+          (polygon) => polygon.id === polygonId
+        );
+
+        if (polygonIndex !== -1) {
+          const updatedPoints = [...updatedPolygons[polygonIndex].points];
+          
+          updatedPoints[vertexIndex] = [
+            x / scale - dragPosition[0],
+            y / scale - dragPosition[1],
+          ];
+
+          updatedPolygons[polygonIndex] = {
+            ...updatedPolygons[polygonIndex],
+            points: updatedPoints,
+          };
+        }
+
         return updatedPolygons;
       });
       setMovingVertex(false);
