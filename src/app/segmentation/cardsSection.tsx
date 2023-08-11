@@ -96,8 +96,8 @@ const CardsSection = ({
               >
                 <div style={{ float: "left" }}>
                   <Badge
-                    color={classColor(polygon.name)}
-                    text={polygon.class as unknown as string}
+                    color={classColor(polygon.class)}
+                    text={`${polygon.class} - ${polygon.id}` as unknown as string}
                   />
                 </div>
                 <div>
