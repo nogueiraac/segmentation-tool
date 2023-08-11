@@ -94,20 +94,15 @@ const CardsSection = ({
                 onClick={() => setSelectedPolygon(polygon)}
                 style={{ cursor: "pointer", display: "flex", width: "100%", alignItems: 'center', justifyContent: 'space-between', }}
               >
-                <div style={{ float: "left" }}>
-                  <Badge
-                    color={classColor(polygon.class)}
-                    text={`${polygon.class} - ${polygon.id}` as unknown as string}
-                  />
+                <div>
+                  <Badge color={classColor(polygon.class)}
+                  text={`${polygon.class} - ${polygon.id}` as unknown as string}/>
                 </div>
                 <div>
-                  <Button
+                  <Tag
                     onClick={() => onRemove(polygon)}
-                    size="small"
                     color="red"
-                    icon={<DeleteOutlined rev={undefined} />}
-                    danger
-                  />
+                  ><DeleteOutlined rev={undefined} /></Tag>
                 </div>
               </div>
             ))}
