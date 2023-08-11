@@ -96,7 +96,7 @@ const CardsSection = ({
               >
                 <div>
                   <Badge color={classColor(polygon.class)}
-                  text={`${polygon.class} - ${polygon.id}` as unknown as string}/>
+                  text={`${polygon.id} - ${polygon.class}` as unknown as string}/>
                 </div>
                 <div>
                   <Tag
@@ -148,7 +148,7 @@ const CardsSection = ({
       <Card title="Selected Polygon" className={styles.card_tab}>
         {selectedPolygon ? (
           <>
-            <span>Name: {selectedPolygon.name}</span>
+            <span>Id: {selectedPolygon.id}</span>
             <br />
             <span>Class: {selectedPolygon.class}</span>
             <br />

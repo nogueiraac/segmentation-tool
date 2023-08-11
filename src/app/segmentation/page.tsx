@@ -69,6 +69,7 @@ const Segmentation: NextPage = () => {
   const [polygonInDrawing, setPolygonInDrawing] = useState<Polygon | null>(
     null
   );
+  const [countPolygons, setCountPolygons] = useState(0);
 
   const [scale, setScale] = useState(1.0);
   const [dragPosition, setDragPosition] = useState([0.0, 0.0]);
@@ -284,9 +285,9 @@ const Segmentation: NextPage = () => {
       setPolygonInDrawing({
         points: [[x, y]],
         color: classColor(polygonName),
-        name: `${polygons.length + 1}-${polygonName}`,
+        name: `${countPolygons + 1} - ${polygonName}`,
         class: polygonName,
-        id: polygons.length + 1,
+        id: countPolygons + 1,
         urlImage: selectedImage?.url || "",
         imageName: selectedImage?.file_name || "",
         imageId: selectedImage.id,
@@ -371,6 +372,7 @@ const Segmentation: NextPage = () => {
       },
     ]);
 
+    setCountPolygons((prevCountPolygons) => prevCountPolygons + 1);
     setPolygonInDrawing(null);
     setInDrawing(false);
     setDrawingStarted(false);
