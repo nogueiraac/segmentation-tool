@@ -1,9 +1,9 @@
-'use client';
+"use client";
 import React, { useContext, useEffect, useState } from "react";
 import { Card, Form, Input, Button, Modal, message, Typography } from "antd";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import UploadedImagesContext from "../../context/uploadedImages";
 import styles from "../styles/NewProject.module.css";
@@ -21,26 +21,28 @@ const Upload: NextPage = () => {
   const router = useRouter();
   const { TextArea } = Input;
   const [formNewProject] = Form.useForm();
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [json, setJson] = useState<any>();
-  const { uploadedImages, setUploadedImages } = useContext(UploadedImagesContext);
+  const { uploadedImages, setUploadedImages } = useContext(
+    UploadedImagesContext
+  );
   const { classes, setClasses } = useContext(ClassesContext);
   const { project, setProject } = useContext(ProjectContext);
   const { setPolygons } = useContext(PolygonsContext);
-  
+
   const onReset = () => {
     formNewProject.resetFields();
   };
 
   const onUpload = () => {
     const aux = formNewProject.getFieldsValue();
-      setProject({
-        classes: classes,
-        description: aux.descriptionProject,
-        name: aux.nameProject,
-        images: uploadedImages,
-      })
-      router.push("/segmentation");
+    setProject({
+      classes: classes,
+      description: aux.descriptionProject,
+      name: aux.nameProject,
+      images: uploadedImages,
+    });
+    router.push("/segmentation");
   };
 
   const onRemove = (item: Image) => {
@@ -54,11 +56,18 @@ const Upload: NextPage = () => {
   const handleInputEnter = (e: any) => {
     e.preventDefault();
 
-    if (inputValue.trim() !== '') {
-      setClasses([...classes, {name: inputValue, color: randomColorGenerator(), id: classes.length + 1 }]);
+    if (inputValue.trim() !== "") {
+      setClasses([
+        ...classes,
+        {
+          name: inputValue,
+          color: randomColorGenerator(),
+          id: classes.length + 1,
+        },
+      ]);
 
-      formNewProject.resetFields(['classes'])
-      setInputValue('');
+      formNewProject.resetFields(["classes"]);
+      setInputValue("");
     }
   };
 
@@ -68,7 +77,7 @@ const Upload: NextPage = () => {
     );
     setClasses(newClasses);
     message.success(`Class '${item}' removed with successful`);
-  }
+  };
 
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
@@ -76,12 +85,12 @@ const Upload: NextPage = () => {
 
     reader.onload = (e) => {
       const contents = e?.target?.result;
-      if (typeof contents === 'string') {
+      if (typeof contents === "string") {
         try {
           const parsedData = JSON.parse(contents);
           setJson(parsedData);
         } catch (error) {
-          console.error('Error parsing JSON file:', error);
+          console.error("Error parsing JSON file:", error);
         }
       }
     };
@@ -93,18 +102,18 @@ const Upload: NextPage = () => {
     if (json) {
       const teste = converterJSON(json);
       let aux: any = null;
-      if (typeof teste === 'string') {
+      if (typeof teste === "string") {
         try {
           const parsedData = JSON.parse(teste);
           aux = parsedData;
         } catch (error) {
-          console.error('Error parsing JSON file:', error);
+          console.error("Error parsing JSON file:", error);
         }
       }
       setClasses(aux?.classes);
       setPolygons(aux?.polygons);
     }
-  }, [json, setClasses, setPolygons])
+  }, [json, setClasses, setPolygons]);
 
   return (
     <>
@@ -112,53 +121,93 @@ const Upload: NextPage = () => {
         <title>Segmentation</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Card className={styles.card_ant}>
-        <Form form={formNewProject} layout="vertical">
-          <Typography>Enter the classes via text field or send a json</Typography>
-          <Form.Item label="Classes" name="classes">
-            <Input 
-              placeholder="Example: Alita" 
-              disabled={json}
-              value={inputValue} 
-              onChange={(e) => setInputValue(e.target.value)}
-              onPressEnter={handleInputEnter}
-            ></Input>
-          </Form.Item>
-            <Form.Item label="Insert classes and masks via JSON">
-              <input id="inputJson" type="file" onChange={handleFileChange} style={{ display: 'none'}} hidden />
-              <Button onClick={() => document.getElementById('inputJson')?.click()} icon={<UploadOutlined />}> Upload Json </Button>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Card className={styles.card_ant}>
+          <Form form={formNewProject} layout="vertical">
+            <Typography>
+              Enter the classes via text field or send a json
+            </Typography>
+            <Form.Item label="Classes" name="classes">
+              <Input
+                placeholder="Example: Alita"
+                disabled={json}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onPressEnter={handleInputEnter}
+              ></Input>
             </Form.Item>
-          <ul style={{ listStyle: 'none', marginBottom: '16px', display: 'flex', gap: '8px'}}>
-            <Typography>Classes List:</Typography>
-            {classes.map((item: Class) => (
-              <li key={item.name} style={{ marginBottom: '8px' }}>
-                <ClassesItem content={item.name} onRemoveClass={onRemoveClass} />
-              </li>
-            ))}
-          </ul>
-          <InputFiles />
-          <div style={{ display: 'flex', width: '100%', maxHeight: '350px', overflowY: 'scroll', marginTop: '24px' }}>
-            <ul className={styles.imagesList}>
-              {uploadedImages?.map((item) => (
-                <li key={item.id}>
-                  <ImageListITem item={item} onRemove={onRemove} />
+            <Form.Item label="Insert classes and masks via JSON">
+              <input
+                id="inputJson"
+                type="file"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+                hidden
+              />
+              <Button
+                onClick={() => document.getElementById("inputJson")?.click()}
+                icon={<UploadOutlined />}
+              >
+                {" "}
+                Upload Json{" "}
+              </Button>
+            </Form.Item>
+            <ul
+              style={{
+                listStyle: "none",
+                marginBottom: "16px",
+                display: "flex",
+                gap: "8px",
+              }}
+            >
+              <Typography>Classes List:</Typography>
+              {classes.map((item: Class) => (
+                <li key={item.name} style={{ marginBottom: "8px" }}>
+                  <ClassesItem
+                    content={item.name}
+                    onRemoveClass={onRemoveClass}
+                  />
                 </li>
               ))}
             </ul>
-          </div>
-          <div className={styles.buttons}>
-            <Button
-              key={2}
-              type="primary"
-              onClick={onUpload}
-              disabled={!(uploadedImages?.length > 0 && classes.length > 0)}
+            <InputFiles />
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                maxHeight: "350px",
+                overflowY: "scroll",
+                marginTop: "24px",
+              }}
             >
-              Create Project
-            </Button>
-          </div>
-        </Form>
-      </Card>
+              <ul className={styles.imagesList}>
+                {uploadedImages?.map((item) => (
+                  <li key={item.id}>
+                    <ImageListITem item={item} onRemove={onRemove} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.buttons}>
+              <Button
+                key={2}
+                type="primary"
+                onClick={onUpload}
+                disabled={!(uploadedImages?.length > 0 && classes.length > 0)}
+              >
+                Create Project
+              </Button>
+            </div>
+          </Form>
+        </Card>
       </div>
     </>
   );

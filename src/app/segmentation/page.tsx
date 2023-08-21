@@ -37,8 +37,8 @@ const Segmentation: NextPage = () => {
   const [selectedImage, setSelectedImage] = useState<ImageType>({
     height: 0,
     id: 0,
-    file_name: '',
-    url: '',
+    file_name: "",
+    url: "",
     width: 0,
   });
   const { project, setProject } = useContext(ProjectContext);
@@ -46,20 +46,22 @@ const Segmentation: NextPage = () => {
   const { polygons, setPolygons } = useContext(PolygonsContext);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
   const [polygonName, setPolygonName] = useState<string>(classes[0]?.name);
-  const [selectedVertex, setSelectedVertex] = useState<Array<[number, number]>>([]); //[polygonId, vertexIndex]
+  const [selectedVertex, setSelectedVertex] = useState<Array<[number, number]>>(
+    []
+  ); //[polygonId, vertexIndex]
 
   const [movingVertex, setMovingVertex] = useState(false);
-  
+
   const classColor = (className: string) => {
     const classObj = classes.find((option) => option?.name === className);
     const classColor = classObj ? classObj.color : "#000000";
     return classColor;
   };
 
-  const classInfo = (key: 'name', value: string | number) => {
+  const classInfo = (key: "name", value: string | number) => {
     const aux = classes.find((item: Class) => item[key] === value);
     return aux || classes[0];
-  }
+  };
 
   const [drawingStarted, setDrawingStarted] = useState(false);
   const [inDrawing, setInDrawing] = useState(false); // PERGUNTAR SE PRECISA DO IN DRAWING
@@ -75,10 +77,9 @@ const Segmentation: NextPage = () => {
 
   useEffect(() => {
     if (classes.length < 1 || uploadedImages.length < 1) {
-      router.push('/');
+      router.push("/");
     }
-  })
-
+  });
 
   useEffect(() => {
     if (uploadedImages.length > 0) {
@@ -89,19 +90,30 @@ const Segmentation: NextPage = () => {
   useEffect(() => {
     let aux: number[][] = [];
     let auxPolygon: Polygon;
-    console.log('teste');
+    console.log("teste");
     if (selectedImage && image) {
       polygons.forEach((polygon) => {
         if (polygon.resized === false) {
           aux = polygon.points.map((item) => {
-            return calculateResizedCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
-          })
-          auxPolygon = {... polygon, points: aux as unknown as [number, number][], resized: true}
+            return calculateResizedCoordinates(
+              { x: item[0], y: item[1] },
+              { width: image!.width, height: image!.height },
+              {
+                width: canvasRef!.current!.width,
+                height: canvasRef!.current!.height,
+              }
+            );
+          });
+          auxPolygon = {
+            ...polygon,
+            points: aux as unknown as [number, number][],
+            resized: true,
+          };
           setPolygons([auxPolygon]);
 
           /* terminar de implementar logica*/
         }
-      })
+      });
     }
   }, [selectedImage, image]);
 
@@ -122,16 +134,16 @@ const Segmentation: NextPage = () => {
   }, [selectedImage]);
 
   useEffect(() => {
-    if(image) {
+    if (image) {
       let teste = uploadedImages.map((item: ImageType) => {
-        if(item.file_name === selectedImage.file_name) {
-          item.height = image.height
+        if (item.file_name === selectedImage.file_name) {
+          item.height = image.height;
           item.width = image.width;
 
           return item;
         }
         return item;
-      })
+      });
 
       setUploadedImages(teste);
     }
@@ -182,7 +194,9 @@ const Segmentation: NextPage = () => {
       const { x, y } = getMousePosition(event);
       let cursorOverPolygon = false;
       polygons
-        .filter((polygon: Polygon) => polygon.imageName === selectedImage.file_name)
+        .filter(
+          (polygon: Polygon) => polygon.imageName === selectedImage.file_name
+        )
         .forEach(({ points }) => {
           const a = isPointInsideVertex(
             x / scale - dragPosition[0],
@@ -237,7 +251,7 @@ const Segmentation: NextPage = () => {
 
         if (polygonIndex !== -1) {
           const updatedPoints = [...updatedPolygons[polygonIndex].points];
-          
+
           updatedPoints[vertexIndex] = [
             x / scale - dragPosition[0],
             y / scale - dragPosition[1],
@@ -261,7 +275,9 @@ const Segmentation: NextPage = () => {
 
     if (!drawingStarted) {
       polygons
-        .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
+        .filter(
+          (polygon: Polygon) => polygon.imageName === selectedImage?.file_name
+        )
         .forEach((polygon) => {
           const pointInsideVertex = isPointInsideVertex(
             x / scale - dragPosition[0],
@@ -276,43 +292,49 @@ const Segmentation: NextPage = () => {
           );
 
           // VERIFICO SE O PONTO CLICADO É UM VÉRTICE.
-          if(pointInsideVertex !== null){
+          if (pointInsideVertex !== null) {
             // VERIFICO SE HÁ VERTICES SELECIONADOS.
-            if(selectedVertex.length > 0){
+            if (selectedVertex.length > 0) {
               // VERIFICO SE O POLÍGONO DO VÉRTICE SELECIONADO É DIFERENTE DO POLÍGONO DOS VÉRTICES JÁ SELECIONADOS.
-              if(selectedVertex[0][0] !== polygon.id){
-                // SELECIONO O NOVO VÉRTICE E DESELECIONO OS VÉRTICES SELECIONADOS NO POLÍGONO ANTERIOR. 
+              if (selectedVertex[0][0] !== polygon.id) {
+                // SELECIONO O NOVO VÉRTICE E DESELECIONO OS VÉRTICES SELECIONADOS NO POLÍGONO ANTERIOR.
                 setSelectedVertex([[polygon.id, pointInsideVertex]]);
-              }else{
+              } else {
                 // VERIFICO SE O VÉRTICE JÁ ESTÁ SELECIONADO.
                 let alreadySelected = false;
-                for(let i = 0; i < selectedVertex.length; i++){
-                  if(selectedVertex[i][0] === polygon.id && selectedVertex[i][1] === pointInsideVertex){
+                for (let i = 0; i < selectedVertex.length; i++) {
+                  if (
+                    selectedVertex[i][0] === polygon.id &&
+                    selectedVertex[i][1] === pointInsideVertex
+                  ) {
                     alreadySelected = true;
                     break;
                   }
                 }
 
-                if (alreadySelected === true){
+                if (alreadySelected === true) {
                   // O VÉRTICE JÁ ESTAVA SELECIONADO, ENTÃO DESELECIONO ELE.
                   setSelectedVertex((prevSelectedVertex) =>
-                  prevSelectedVertex.filter((vertex) => vertex[1] !== pointInsideVertex)
+                    prevSelectedVertex.filter(
+                      (vertex) => vertex[1] !== pointInsideVertex
+                    )
                   );
-                } else{
+                } else {
                   // O VÉRTICE NÃO ESTAVA SELECIONADO, ENTÃO SELECIONO ELE.
                   setSelectedVertex((prevSelectedVertex) => [
                     ...prevSelectedVertex,
-                    [polygon.id, pointInsideVertex]
+                    [polygon.id, pointInsideVertex],
                   ]);
                 }
               }
-            }else{
+            } else {
               // ADICIONO O PRIMEIRO VÉRTICE A LISTA DE VÉRTICES SELECIONADOS.
               setSelectedVertex([[polygon.id, pointInsideVertex]]);
             }
-          } else if (pointInsidePolygon){ // VERIFICO SE O PONTO CLICADO É DE UM POLÍGONO.
+          } else if (pointInsidePolygon) {
+            // VERIFICO SE O PONTO CLICADO É DE UM POLÍGONO.
             setSelectedPolygon(polygon);
-          }     
+          }
         });
     }
 
@@ -355,25 +377,40 @@ const Segmentation: NextPage = () => {
 
   const saveCoordenates = () => {
     let newPolygons: any[] = [];
-    polygons.forEach(({ imageId, imageName, points, class: actualClass }, index: number) => {
-      const segmentation = [points.map((item: [number, number]) => {
-        return calculateOriginalCoordinates({x: item[0], y: item[1]}, {width: image!.width, height: image!.height}, { width: canvasRef!.current!.width, height: canvasRef!.current!.height})
-      }).flatMap((coordItem) => coordItem)];
-      const polygon = {
-        id_mask: index + 1,
-        image_id: imageId,
-        category_id: classInfo('name', actualClass).id,
-        segmentation,
-        bbox: returnBbox(segmentation[0]),
+    polygons.forEach(
+      ({ imageId, imageName, points, class: actualClass }, index: number) => {
+        const segmentation = [
+          points
+            .map((item: [number, number]) => {
+              return calculateOriginalCoordinates(
+                { x: item[0], y: item[1] },
+                { width: image!.width, height: image!.height },
+                {
+                  width: canvasRef!.current!.width,
+                  height: canvasRef!.current!.height,
+                }
+              );
+            })
+            .flatMap((coordItem) => coordItem),
+        ];
+        const polygon = {
+          id_mask: index + 1,
+          image_id: imageId,
+          category_id: classInfo("name", actualClass).id,
+          segmentation,
+          bbox: returnBbox(segmentation[0]),
+        };
+        newPolygons = [...newPolygons, polygon];
       }
-      newPolygons = [...newPolygons, polygon];
-    });
+    );
     const data = {
       projectName: project.name,
       projectDescription: project.description,
       annotations: newPolygons,
       images: uploadedImages,
-      categories: classes.map((item: Class) => { return { id: item.id, name: item.name }}),
+      categories: classes.map((item: Class) => {
+        return { id: item.id, name: item.name };
+      }),
     };
     const coordenadas = JSON.stringify(data);
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
@@ -427,8 +464,10 @@ const Segmentation: NextPage = () => {
   const handlePointPolygonButtonClick = () => {
     if (selectedVertex.length === 0) return;
 
-      polygons
-      .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
+    polygons
+      .filter(
+        (polygon: Polygon) => polygon.imageName === selectedImage?.file_name
+      )
       .filter((polygon: Polygon) => polygon.id === selectedVertex[0][0])
       .forEach(({ points }) => {
         setPolygons;
@@ -439,32 +478,27 @@ const Segmentation: NextPage = () => {
             )
           );
         } else {
-
           let vertexIndexList = [];
-          for (let i = 0; i < selectedVertex.length; i++){
+          for (let i = 0; i < selectedVertex.length; i++) {
             vertexIndexList.push(selectedVertex[i][1]);
           }
           vertexIndexList.sort((a, b) => b - a);
 
           let newPoints = points;
-          for(let i = 0; i < vertexIndexList.length; i++){
-            let beforeSelectedVertex = newPoints.slice(
-              0, vertexIndexList[i]
-            );
-            let afterSelectedVertex = newPoints.slice(
-              vertexIndexList[i] + 1
-            );
+          for (let i = 0; i < vertexIndexList.length; i++) {
+            let beforeSelectedVertex = newPoints.slice(0, vertexIndexList[i]);
+            let afterSelectedVertex = newPoints.slice(vertexIndexList[i] + 1);
             newPoints = beforeSelectedVertex.concat(afterSelectedVertex);
           }
 
           setPolygons((prevPolygons) =>
-              prevPolygons.map((polygon) => {
-                if (polygon.id === selectedVertex[0][0]) {
-                  return { ...polygon, points: newPoints };
-                }
-                return polygon;
-              })
-            );
+            prevPolygons.map((polygon) => {
+              if (polygon.id === selectedVertex[0][0]) {
+                return { ...polygon, points: newPoints };
+              }
+              return polygon;
+            })
+          );
         }
         setSelectedVertex([]);
       });

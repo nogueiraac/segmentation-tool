@@ -62,9 +62,9 @@ const ButtonsCard = ({
   return (
     <div>
       <div style={{ display: "inline-block" }}>
-        <Card title='Actions' className={styles.card_tools} size="small">
+        <Card title="Actions" className={styles.card_tools} size="small">
           <Space direction="vertical" align="center" size={"middle"}>
-            <Tooltip placement='left' title='Start segmentation'>
+            <Tooltip placement="left" title="Start segmentation">
               <Button
                 type="primary"
                 danger
@@ -73,28 +73,32 @@ const ButtonsCard = ({
                 disabled={!inDrawing}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Delete point'>
+            <Tooltip placement="left" title="Delete point">
               <Button
                 type="primary"
                 danger
                 onClick={handlePointPolygonButtonClick}
                 icon={<DeleteOutlined />}
                 disabled={
-                  inDrawing || selectedVertex.length === 0 || movingVertex === true
+                  inDrawing ||
+                  selectedVertex.length === 0 ||
+                  movingVertex === true
                 }
               />
             </Tooltip>
-            <Tooltip placement='left' title='Edit selected point'>
+            <Tooltip placement="left" title="Edit selected point">
               <Button
                 type="primary"
                 onClick={handleMovingVertexButtonClick}
                 icon={<EditOutlined />}
                 disabled={
-                  inDrawing || selectedVertex.length !== 1 || movingVertex === true
+                  inDrawing ||
+                  selectedVertex.length !== 1 ||
+                  movingVertex === true
                 }
               />
             </Tooltip>
-            <Tooltip placement='left' title='Start segmentation'>
+            <Tooltip placement="left" title="Start segmentation">
               <Button
                 type="primary"
                 onClick={handleStartButtonClick}
@@ -102,7 +106,7 @@ const ButtonsCard = ({
                 disabled={inDrawing || drawingStarted || movingVertex === true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Finish polygon'>
+            <Tooltip placement="left" title="Finish polygon">
               <Button
                 type="primary"
                 onClick={handleFinishButtonClick}
@@ -114,7 +118,7 @@ const ButtonsCard = ({
                 }
               />
             </Tooltip>
-            <Tooltip placement='left' title='Zoom in'>
+            <Tooltip placement="left" title="Zoom in">
               <Button
                 type="primary"
                 onClick={handleZoomIn}
@@ -123,7 +127,7 @@ const ButtonsCard = ({
                 // disabled={true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Zoom out'>
+            <Tooltip placement="left" title="Zoom out">
               <Button
                 type="primary"
                 onClick={handleZoomOut}
@@ -132,7 +136,7 @@ const ButtonsCard = ({
                 // disabled={true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Move up'>
+            <Tooltip placement="left" title="Move up">
               <Button
                 type="primary"
                 onClick={handleDragUp}
@@ -141,7 +145,7 @@ const ButtonsCard = ({
                 // disabled={true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Move down'>
+            <Tooltip placement="left" title="Move down">
               <Button
                 type="primary"
                 onClick={handleDragDown}
@@ -150,7 +154,7 @@ const ButtonsCard = ({
                 // disabled={true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Move left'>
+            <Tooltip placement="left" title="Move left">
               <Button
                 type="primary"
                 onClick={handleDragLeft}
@@ -159,7 +163,7 @@ const ButtonsCard = ({
                 // disabled={true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Move right'>
+            <Tooltip placement="left" title="Move right">
               <Button
                 type="primary"
                 onClick={handleDragRight}
@@ -168,7 +172,7 @@ const ButtonsCard = ({
                 // disabled={true}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Delete selected polygon'>
+            <Tooltip placement="left" title="Delete selected polygon">
               <Button
                 type="primary"
                 danger
@@ -177,7 +181,7 @@ const ButtonsCard = ({
                 disabled={inDrawing || selectedPolygon === null}
               />
             </Tooltip>
-            <Tooltip placement='left' title='Export JSON'>
+            <Tooltip placement="left" title="Export JSON">
               <Button
                 type="primary"
                 onClick={saveCoordenates}

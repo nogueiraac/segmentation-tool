@@ -43,8 +43,8 @@ export function drawVertices(
 
     let vertexSelected = false;
 
-    for(let j = 0; j < selectedVertex.length; j++){
-      if(selectedVertex[j][0] === polygonId && selectedVertex[j][1] === i){
+    for (let j = 0; j < selectedVertex.length; j++) {
+      if (selectedVertex[j][0] === polygonId && selectedVertex[j][1] === i) {
         vertexSelected = true;
       }
     }

@@ -55,7 +55,9 @@ const CardsSection = ({
 
   const polygonGroups: { [key: string]: number } = {};
   polygons
-    .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
+    .filter(
+      (polygon: Polygon) => polygon.imageName === selectedImage?.file_name
+    )
     .forEach((polygon: Polygon) => {
       const polygonClass = polygon.class as unknown as string;
       polygonGroups[polygonClass] = (polygonGroups[polygonClass] || 0) + 1;
@@ -65,20 +67,26 @@ const CardsSection = ({
     classes:
       polygons.length > 0 ? (
         <div>
-          {
-            Object.keys(polygonGroups).map((polygonClass, index) => {
-              return (
-                <div key={`${polygonClass}-${index}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row'}}>
-                  <div>
-                    <Badge color={classColor(polygonClass)} text={polygonClass} />
-                  </div>
-                  <div>
-                    <Tag color="blue">{polygonGroups[polygonClass]}</Tag>
-                  </div>
+          {Object.keys(polygonGroups).map((polygonClass, index) => {
+            return (
+              <div
+                key={`${polygonClass}-${index}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                }}
+              >
+                <div>
+                  <Badge color={classColor(polygonClass)} text={polygonClass} />
                 </div>
-              )
-            })
-          }
+                <div>
+                  <Tag color="blue">{polygonGroups[polygonClass]}</Tag>
+                </div>
+              </div>
+            );
+          })}
         </div>
       ) : (
         <span>No segmented classes</span>
@@ -87,22 +95,34 @@ const CardsSection = ({
       polygons.length > 0 ? (
         <div>
           {polygons
-            .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
+            .filter(
+              (polygon: Polygon) =>
+                polygon.imageName === selectedImage?.file_name
+            )
             .map((polygon: Polygon) => (
               <div
                 key={polygon.id}
                 onClick={() => setSelectedPolygon(polygon)}
-                style={{ cursor: "pointer", display: "flex", width: "100%", alignItems: 'center', justifyContent: 'space-between', }}
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
                 <div>
-                  <Badge color={classColor(polygon.class)}
-                  text={`${polygon.id} - ${polygon.class}` as unknown as string}/>
+                  <Badge
+                    color={classColor(polygon.class)}
+                    text={
+                      `${polygon.id} - ${polygon.class}` as unknown as string
+                    }
+                  />
                 </div>
                 <div>
-                  <Tag
-                    onClick={() => onRemove(polygon)}
-                    color="red"
-                  ><DeleteOutlined rev={undefined} /></Tag>
+                  <Tag onClick={() => onRemove(polygon)} color="red">
+                    <DeleteOutlined rev={undefined} />
+                  </Tag>
                 </div>
               </div>
             ))}
