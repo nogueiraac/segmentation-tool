@@ -80,7 +80,7 @@ const ButtonsCard = ({
                 onClick={handlePointPolygonButtonClick}
                 icon={<DeleteOutlined />}
                 disabled={
-                  inDrawing || selectedVertex === null || movingVertex === true
+                  inDrawing || selectedVertex.length === 0 || movingVertex === true
                 }
               />
             </Tooltip>
@@ -90,7 +90,7 @@ const ButtonsCard = ({
                 onClick={handleMovingVertexButtonClick}
                 icon={<EditOutlined />}
                 disabled={
-                  inDrawing || selectedVertex === null || movingVertex === true
+                  inDrawing || selectedVertex.length !== 1 || movingVertex === true
                 }
               />
             </Tooltip>

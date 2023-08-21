@@ -46,10 +46,7 @@ const Segmentation: NextPage = () => {
   const { polygons, setPolygons } = useContext(PolygonsContext);
   const [selectedPolygon, setSelectedPolygon] = useState<Polygon | null>(null);
   const [polygonName, setPolygonName] = useState<string>(classes[0]?.name);
-  const [selectedVertex, setSelectedVertex] = useState<{
-    polygonId: number;
-    vertexIndex: number;
-  } | null>(null);
+  const [selectedVertex, setSelectedVertex] = useState<Array<[number, number]>>([]); //[polygonId, vertexIndex]
 
   const [movingVertex, setMovingVertex] = useState(false);
   
@@ -226,9 +223,11 @@ const Segmentation: NextPage = () => {
     const y = event.clientY - rect.top;
     // < AQUI NÃO DÁ PRA UTILIZAR O getMousePosition, ENTÃO FAÇO MANUALMENTE. />
 
-    if (movingVertex && selectedVertex) {
+    if (movingVertex && selectedVertex.length > 0) {
       setPolygons((prevPolygons) => {
-        const { polygonId, vertexIndex } = selectedVertex;
+        const polygonId = selectedVertex[0][0]; // Tentar melhorar
+        const vertexIndex = selectedVertex[0][1]; // Tentar melhorar
+
         const updatedPolygons = [...prevPolygons];
 
         // Encontra o índice do polígono com base no nome
@@ -255,40 +254,65 @@ const Segmentation: NextPage = () => {
       setMovingVertex(false);
     }
 
-    setSelectedVertex(null);
+    console.log(selectedVertex);
+
+    // setSelectedVertex([]); // AQUI N PODE PQ PERDE OS PONTOS ANTERIORES
     setSelectedPolygon(null);
 
     if (!drawingStarted) {
-      let polygonIsSelected = false;
-      let vertexIsSelected = false;
-
       polygons
         .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
         .forEach((polygon) => {
-          const a = isPointInsideVertex(
+          const pointInsideVertex = isPointInsideVertex(
             x / scale - dragPosition[0],
             y / scale - dragPosition[1],
             polygon.points
           );
 
-          const b = isPointInsidePolygon(
+          const pointInsidePolygon = isPointInsidePolygon(
             x / scale - dragPosition[0],
             y / scale - dragPosition[1],
             polygon.points
           );
 
-          // PRIMEIRO VERIFICA SE O VÉRTICE ESTÁ SELECIONADO, POIS ELE É PRIORIDADE EM CASO DE UMA ARESTA E UM VÉRTICE DIVIDIREM UM MESMO PONTO.
-          if (a !== null && polygonIsSelected === false) {
-            setSelectedVertex({
-              polygonId: polygon.id,
-              vertexIndex: a,
-            });
-            vertexIsSelected = true;
-          } else if (b && vertexIsSelected === false) {
-            // CASO CONTRÁRIO, VERIFICA SE O POLÍGONO ESTÁ SELECIONADO.
+          // VERIFICO SE O PONTO CLICADO É UM VÉRTICE.
+          if(pointInsideVertex !== null){
+            // VERIFICO SE HÁ VERTICES SELECIONADOS.
+            if(selectedVertex.length > 0){
+              // VERIFICO SE O POLÍGONO DO VÉRTICE SELECIONADO É DIFERENTE DO POLÍGONO DOS VÉRTICES JÁ SELECIONADOS.
+              if(selectedVertex[0][0] !== polygon.id){
+                // SELECIONO O NOVO VÉRTICE E DESELECIONO OS VÉRTICES SELECIONADOS NO POLÍGONO ANTERIOR. 
+                setSelectedVertex([[polygon.id, pointInsideVertex]]);
+              }else{
+                // VERIFICO SE O VÉRTICE JÁ ESTÁ SELECIONADO.
+                let alreadySelected = false;
+                for(let i = 0; i < selectedVertex.length; i++){
+                  if(selectedVertex[i][0] === polygon.id && selectedVertex[i][1] === pointInsideVertex){
+                    alreadySelected = true;
+                    break;
+                  }
+                }
+
+                if (alreadySelected === true){
+                  // O VÉRTICE JÁ ESTAVA SELECIONADO, ENTÃO DESELECIONO ELE.
+                  setSelectedVertex((prevSelectedVertex) =>
+                  prevSelectedVertex.filter((vertex) => vertex[1] !== pointInsideVertex)
+                  );
+                } else{
+                  // O VÉRTICE NÃO ESTAVA SELECIONADO, ENTÃO SELECIONO ELE.
+                  setSelectedVertex((prevSelectedVertex) => [
+                    ...prevSelectedVertex,
+                    [polygon.id, pointInsideVertex]
+                  ]);
+                }
+              }
+            }else{
+              // ADICIONO O PRIMEIRO VÉRTICE A LISTA DE VÉRTICES SELECIONADOS.
+              setSelectedVertex([[polygon.id, pointInsideVertex]]);
+            }
+          } else if (pointInsidePolygon){ // VERIFICO SE O PONTO CLICADO É DE UM POLÍGONO.
             setSelectedPolygon(polygon);
-            polygonIsSelected = true;
-          }
+          }     
         });
     }
 
@@ -365,7 +389,7 @@ const Segmentation: NextPage = () => {
   const handleStartButtonClick = () => {
     setDrawingStarted(true);
     setSelectedPolygon(null);
-    setSelectedVertex(null);
+    setSelectedVertex([]);
   };
 
   const handleFinishButtonClick = () => {
@@ -401,40 +425,48 @@ const Segmentation: NextPage = () => {
   };
 
   const handlePointPolygonButtonClick = () => {
-    if (!selectedVertex) return;
+    if (selectedVertex.length === 0) return;
 
-    polygons
+      polygons
       .filter((polygon: Polygon) => polygon.imageName === selectedImage?.file_name)
-      .filter((polygon: Polygon) => polygon.id === selectedVertex.polygonId)
+      .filter((polygon: Polygon) => polygon.id === selectedVertex[0][0])
       .forEach(({ points }) => {
         setPolygons;
-        if (points.length <= 3) {
+        if (points.length - selectedVertex.length < 3) {
           setPolygons((prevPolygons) =>
             prevPolygons.filter(
-              (polygon) => polygon.id !== selectedVertex.polygonId
+              (polygon) => polygon.id !== selectedVertex[0][0]
             )
           );
         } else {
-          const beforeSelectedVertex = points.slice(
-            0,
-            selectedVertex.vertexIndex
-          );
-          const afterSelectedVertex = points.slice(
-            selectedVertex.vertexIndex + 1
-          );
-          const newPoints = beforeSelectedVertex.concat(afterSelectedVertex);
+
+          let vertexIndexList = [];
+          for (let i = 0; i < selectedVertex.length; i++){
+            vertexIndexList.push(selectedVertex[i][1]);
+          }
+          vertexIndexList.sort((a, b) => b - a);
+
+          let newPoints = points;
+          for(let i = 0; i < vertexIndexList.length; i++){
+            let beforeSelectedVertex = newPoints.slice(
+              0, vertexIndexList[i]
+            );
+            let afterSelectedVertex = newPoints.slice(
+              vertexIndexList[i] + 1
+            );
+            newPoints = beforeSelectedVertex.concat(afterSelectedVertex);
+          }
 
           setPolygons((prevPolygons) =>
-            prevPolygons.map((polygon) => {
-              if (polygon.id === selectedVertex.polygonId) {
-                return { ...polygon, points: newPoints };
-              }
-              return polygon;
-            })
-          );
+              prevPolygons.map((polygon) => {
+                if (polygon.id === selectedVertex[0][0]) {
+                  return { ...polygon, points: newPoints };
+                }
+                return polygon;
+              })
+            );
         }
-
-        setSelectedVertex(null);
+        setSelectedVertex([]);
       });
   };
 
@@ -650,7 +682,7 @@ const Segmentation: NextPage = () => {
                   onClick={() => {
                     setSelectedImage(item);
                     setSelectedPolygon(null);
-                    setSelectedVertex(null);
+                    setSelectedVertex([]);
                     setScale(1.0);
                     setDragPosition([0.0, 0.0]);
                   }}

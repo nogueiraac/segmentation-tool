@@ -28,7 +28,7 @@ export function drawEdges(
 }
 
 export function drawVertices(
-  selectedVertex: { polygonId: number; vertexIndex: number } | null,
+  selectedVertex: [number, number][],
   polygonId: number | null,
   polygonPoints: [number, number][],
   polygonColor: string,
@@ -41,9 +41,13 @@ export function drawVertices(
 
     ctx.lineWidth = 1;
 
-    const vertexSelected =
-      selectedVertex?.polygonId === polygonId &&
-      selectedVertex?.vertexIndex === i;
+    let vertexSelected = false;
+
+    for(let j = 0; j < selectedVertex.length; j++){
+      if(selectedVertex[j][0] === polygonId && selectedVertex[j][1] === i){
+        vertexSelected = true;
+      }
+    }
 
     ctx.fillStyle = vertexSelected ? "#00ff00" : polygonColor;
     ctx.fill();
@@ -58,7 +62,7 @@ export function drawPolygons(
   polygons: Polygon[],
   selectedImage: any,
   selectedPolygon: Polygon | null,
-  selectedVertex: { polygonId: number; vertexIndex: number } | null,
+  selectedVertex: [number, number][],
   ctx: CanvasRenderingContext2D
 ) {
   polygons
@@ -78,7 +82,7 @@ export function drawPolygonInDrawing(
     const { id, points, color } = polygonInDrawing;
 
     drawEdges(null, id, points, color, ctx);
-    drawVertices(null, id, points, color, ctx);
+    drawVertices([], id, points, color, ctx);
   }
 }
 
