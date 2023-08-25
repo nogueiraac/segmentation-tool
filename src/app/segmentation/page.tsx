@@ -20,6 +20,7 @@ import {
   isPointInsideVertex,
   calculateOriginalCoordinates,
   calculateResizedCoordinates,
+  moveSelectedVertex,
 } from "../utils/segmentation";
 import ProjectContext from "@/context/project";
 import ClassesContext from "@/context/classes";
@@ -50,7 +51,7 @@ const Segmentation: NextPage = () => {
     []
   ); //[polygonId, vertexIndex]
 
-  const [movingVertex, setMovingVertex] = useState(false);
+  const [movingSelectedVertex, setMovingSelectedVertex] = useState(false);
 
   const classColor = (className: string) => {
     const classObj = classes.find((option) => option?.name === className);
@@ -198,19 +199,19 @@ const Segmentation: NextPage = () => {
           (polygon: Polygon) => polygon.imageName === selectedImage.file_name
         )
         .forEach(({ points }) => {
-          const a = isPointInsideVertex(
+          const pointInsideVertex = isPointInsideVertex(
             x / scale - dragPosition[0],
             y / scale - dragPosition[1],
             points
           );
 
-          const b = isPointInsidePolygon(
+          const pointInsidePolygon = isPointInsidePolygon(
             x / scale - dragPosition[0],
             y / scale - dragPosition[1],
             points
           );
 
-          if (a !== null || b) {
+          if (pointInsideVertex !== null || pointInsidePolygon) {
             cursorOverPolygon = true;
           }
         });
@@ -229,48 +230,24 @@ const Segmentation: NextPage = () => {
   };
 
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    // < AQUI NÃO DÁ PRA UTILIZAR O getMousePosition, ENTÃO FAÇO MANUALMENTE. >
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    // < AQUI NÃO DÁ PRA UTILIZAR O getMousePosition, ENTÃO FAÇO MANUALMENTE. />
 
-    if (movingVertex && selectedVertex.length > 0) {
+    if (movingSelectedVertex && selectedVertex.length > 0) {
       setPolygons((prevPolygons) => {
-        const polygonId = selectedVertex[0][0]; // Tentar melhorar
-        const vertexIndex = selectedVertex[0][1]; // Tentar melhorar
-
-        const updatedPolygons = [...prevPolygons];
-
-        // Encontra o índice do polígono com base no nome
-        const polygonIndex = updatedPolygons.findIndex(
-          (polygon) => polygon.id === polygonId
+        return moveSelectedVertex(
+          prevPolygons,
+          selectedVertex,
+          x / scale - dragPosition[0],
+          y / scale - dragPosition[1]
         );
-
-        if (polygonIndex !== -1) {
-          const updatedPoints = [...updatedPolygons[polygonIndex].points];
-
-          updatedPoints[vertexIndex] = [
-            x / scale - dragPosition[0],
-            y / scale - dragPosition[1],
-          ];
-
-          updatedPolygons[polygonIndex] = {
-            ...updatedPolygons[polygonIndex],
-            points: updatedPoints,
-          };
-        }
-
-        return updatedPolygons;
       });
-      setMovingVertex(false);
+      setMovingSelectedVertex(false);
     }
 
-    console.log(selectedVertex);
-
-    // setSelectedVertex([]); // AQUI N PODE PQ PERDE OS PONTOS ANTERIORES
     setSelectedPolygon(null);
 
     if (!drawingStarted) {
@@ -504,8 +481,8 @@ const Segmentation: NextPage = () => {
       });
   };
 
-  const handleMovingVertexButtonClick = () => {
-    setMovingVertex(true);
+  const handleMovingSelectedVertexButtonClick = () => {
+    setMovingSelectedVertex(true);
   };
 
   const handleUndoPointClick = () => {
@@ -682,7 +659,7 @@ const Segmentation: NextPage = () => {
               drawingStarted={drawingStarted}
               selectedPolygon={selectedPolygon}
               selectedVertex={selectedVertex}
-              movingVertex={movingVertex}
+              movingSelectedVertex={movingSelectedVertex}
               polygonInDrawing={polygonInDrawing}
               handleFinishButtonClick={handleFinishButtonClick}
               handleZoomIn={handleZoomIn}
@@ -694,7 +671,9 @@ const Segmentation: NextPage = () => {
               handleDeletePolygonButtonClick={handleDeletePolygonButtonClick}
               handleUndoPointClick={handleUndoPointClick}
               handlePointPolygonButtonClick={handlePointPolygonButtonClick}
-              handleMovingVertexButtonClick={handleMovingVertexButtonClick}
+              handleMovingSelectedVertexButtonClick={
+                handleMovingSelectedVertexButtonClick
+              }
               saveCoordenates={saveCoordenates}
             />
           </div>

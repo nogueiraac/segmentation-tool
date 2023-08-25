@@ -22,7 +22,7 @@ type ButtonsCardProps = {
   drawingStarted: any;
   selectedPolygon: any;
   selectedVertex: any;
-  movingVertex: any;
+  movingSelectedVertex: any;
   polygonInDrawing: any;
   handleFinishButtonClick: any;
   handleZoomIn: any;
@@ -34,7 +34,7 @@ type ButtonsCardProps = {
   handleDeletePolygonButtonClick: any;
   handlePointPolygonButtonClick: any;
   handleUndoPointClick: any;
-  handleMovingVertexButtonClick: any;
+  handleMovingSelectedVertexButtonClick: any;
   saveCoordenates: any;
 };
 
@@ -43,7 +43,7 @@ const ButtonsCard = ({
   handleDeletePolygonButtonClick,
   handlePointPolygonButtonClick,
   handleUndoPointClick,
-  handleMovingVertexButtonClick,
+  handleMovingSelectedVertexButtonClick,
   handleFinishButtonClick,
   handleZoomIn,
   handleZoomOut,
@@ -56,7 +56,7 @@ const ButtonsCard = ({
   saveCoordenates,
   selectedPolygon,
   selectedVertex,
-  movingVertex,
+  movingSelectedVertex,
   polygonInDrawing,
 }: ButtonsCardProps) => {
   return (
@@ -82,19 +82,19 @@ const ButtonsCard = ({
                 disabled={
                   inDrawing ||
                   selectedVertex.length === 0 ||
-                  movingVertex === true
+                  movingSelectedVertex === true
                 }
               />
             </Tooltip>
             <Tooltip placement="left" title="Edit selected point">
               <Button
                 type="primary"
-                onClick={handleMovingVertexButtonClick}
+                onClick={handleMovingSelectedVertexButtonClick}
                 icon={<EditOutlined />}
                 disabled={
                   inDrawing ||
                   selectedVertex.length !== 1 ||
-                  movingVertex === true
+                  movingSelectedVertex === true
                 }
               />
             </Tooltip>
@@ -103,7 +103,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={handleStartButtonClick}
                 icon={<CaretRightOutlined />}
-                disabled={inDrawing || drawingStarted || movingVertex === true}
+                disabled={inDrawing || drawingStarted || movingSelectedVertex === true}
               />
             </Tooltip>
             <Tooltip placement="left" title="Finish polygon">
@@ -123,7 +123,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={handleZoomIn}
                 icon={<ZoomInOutlined />}
-                disabled={inDrawing || movingVertex === true}
+                disabled={inDrawing || movingSelectedVertex === true}
                 // disabled={true}
               />
             </Tooltip>
@@ -132,7 +132,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={handleZoomOut}
                 icon={<ZoomOutOutlined />}
-                disabled={inDrawing || movingVertex === true}
+                disabled={inDrawing || movingSelectedVertex === true}
                 // disabled={true}
               />
             </Tooltip>
@@ -141,7 +141,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={handleDragUp}
                 icon={<UpCircleOutlined />}
-                disabled={inDrawing || movingVertex === true}
+                disabled={inDrawing || movingSelectedVertex === true}
                 // disabled={true}
               />
             </Tooltip>
@@ -150,7 +150,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={handleDragDown}
                 icon={<DownCircleOutlined />}
-                disabled={inDrawing || movingVertex === true}
+                disabled={inDrawing || movingSelectedVertex === true}
                 // disabled={true}
               />
             </Tooltip>
@@ -159,7 +159,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={handleDragLeft}
                 icon={<LeftCircleOutlined />}
-                disabled={inDrawing || movingVertex === true}
+                disabled={inDrawing || movingSelectedVertex === true}
                 // disabled={true}
               />
             </Tooltip>
@@ -168,7 +168,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={handleDragRight}
                 icon={<RightCircleOutlined />}
-                disabled={inDrawing || movingVertex === true}
+                disabled={inDrawing || movingSelectedVertex === true}
                 // disabled={true}
               />
             </Tooltip>
@@ -186,7 +186,7 @@ const ButtonsCard = ({
                 type="primary"
                 onClick={saveCoordenates}
                 icon={<ExportOutlined />}
-                disabled={inDrawing || movingVertex === true}
+                disabled={inDrawing || movingSelectedVertex === true}
               />
             </Tooltip>
           </Space>

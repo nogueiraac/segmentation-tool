@@ -86,6 +86,39 @@ export function drawPolygonInDrawing(
   }
 }
 
+export function moveSelectedVertex(
+  polygons: Polygon[],
+  selectedVertex: [number, number][],
+  newCordenateX: number,
+  newCordenateY: number
+){
+  const polygonId = selectedVertex[0][0];
+  const vertexIndex = selectedVertex[0][1];
+
+  const updatedPolygons = [...polygons];
+
+  // ENCONTRA O ÍNDICE COM BASE NO ID DO POLÍGONO.
+  const polygonIndex = updatedPolygons.findIndex(
+    (polygon) => polygon.id === polygonId
+  );
+
+  if (polygonIndex !== -1) {
+    const updatedPoints = [...updatedPolygons[polygonIndex].points];
+
+    updatedPoints[vertexIndex] = [
+      newCordenateX,
+      newCordenateY,
+    ];
+
+    updatedPolygons[polygonIndex] = {
+      ...updatedPolygons[polygonIndex],
+      points: updatedPoints,
+    };
+  }
+
+  return updatedPolygons;
+}
+
 export const resizeImage = (
   image: { width: number; height: number },
   canvas: { width: number; height: number }
