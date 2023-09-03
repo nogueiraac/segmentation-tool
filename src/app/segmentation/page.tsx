@@ -91,7 +91,6 @@ const Segmentation: NextPage = () => {
   useEffect(() => {
     let aux: number[][] = [];
     let auxPolygon: Polygon;
-    console.log('teste');
     if (selectedImage && image) {
       polygons.forEach((polygon) => {
         if (polygon.resized === false) {

@@ -20,9 +20,10 @@ export type Polygon = {
 export type Image = {
   id: number;
   file_name: string;
-  url: string;
+  url: any;
   width: number;
   height: number;
+  formData: any;
 };
 
 export type Project = {

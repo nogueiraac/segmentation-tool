@@ -4,6 +4,7 @@ import styles from "./styles.module.css";
 import UploadedImagesContext from '@/context/uploadedImages';
 import uuid from 'react-uuid';
 import { Image } from '@/types';
+import { imageFormData } from '@/app/utils/imageFormData';
 
 const InputFiles = () => {
   const { uploadedImages, setUploadedImages } = useContext(UploadedImagesContext);
@@ -13,13 +14,16 @@ const InputFiles = () => {
     const files: any[] = event.target.files;
     const aux:Image[] = [];
       for (let index = 0; index < files.length; index += 1) {
+        console.log(files[index]);
         const fileObj = {
           id: index,
           file_name: files[index].name,
           url: URL.createObjectURL(files[index]),
           height: 0,
           width: 0,
+          formData: imageFormData(files[index]),
         };
+        console.log('teste 2', fileObj);
         aux.push(fileObj)
         setUploadedImages(uploadedImages.concat(aux));
       }
@@ -46,6 +50,7 @@ const InputFiles = () => {
         url: URL.createObjectURL(files[index]),
         height: 0,
         width: 0,
+        formData: imageFormData(files[index]),
       };
       aux.push(fileObj)
       setUploadedImages(uploadedImages.concat(aux));
