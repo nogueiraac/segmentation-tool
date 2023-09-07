@@ -64,7 +64,7 @@ const ButtonsCard = ({
       <div style={{ display: "inline-block" }}>
         <Card title="Actions" className={styles.card_tools} size="small">
           <Space direction="vertical" align="center" size={"middle"}>
-            <Tooltip placement="left" title="Start segmentation">
+            <Tooltip placement="left" title="Undo Point Click">
               <Button
                 type="primary"
                 danger

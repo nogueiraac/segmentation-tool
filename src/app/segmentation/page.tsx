@@ -89,32 +89,42 @@ const Segmentation: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    let aux: number[][] = [];
-    let auxPolygon: Polygon;
-    console.log("teste");
     if (selectedImage && image) {
-      polygons.forEach((polygon) => {
-        if (polygon.resized === false) {
-          aux = polygon.points.map((item) => {
-            return calculateResizedCoordinates(
-              { x: item[0], y: item[1] },
-              { width: image!.width, height: image!.height },
-              {
-                width: canvasRef!.current!.width,
-                height: canvasRef!.current!.height,
-              }
-            );
-          });
-          auxPolygon = {
+      const updatedPolygons = polygons.map((polygon) => {
+        if (!polygon.resized) {
+          const resizedPoints: [number, number][] = polygon.points.map(
+            (item) => [
+              calculateResizedCoordinates(
+                { x: item[0], y: item[1] },
+                { width: image.width, height: image.height },
+                {
+                  width: canvasRef!.current!.width,
+                  height: canvasRef!.current!.height,
+                }
+              )[0], // Coordenada X redimensionada
+              calculateResizedCoordinates(
+                { x: item[0], y: item[1] },
+                { width: image.width, height: image.height },
+                {
+                  width: canvasRef!.current!.width,
+                  height: canvasRef!.current!.height,
+                }
+              )[1], // Coordenada Y redimensionada
+            ]
+          );
+
+          return {
             ...polygon,
-            points: aux as unknown as [number, number][],
+            points: resizedPoints,
             resized: true,
           };
-          setPolygons([auxPolygon]);
-
-          /* terminar de implementar logica*/
         }
+
+        return polygon; // Se já foi redimensionado, mantenha o mesmo objeto.
       });
+
+      setPolygons(updatedPolygons);
+      setCountPolygons(polygons.length);
     }
   }, [selectedImage, image]);
 

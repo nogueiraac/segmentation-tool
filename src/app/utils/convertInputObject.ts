@@ -1,3 +1,5 @@
+import { randomColorGenerator } from "./randomColorGenerator";
+
 type obj = {
   polygons: any[];
   classes: any[];
@@ -30,29 +32,38 @@ export function converterJSON(jsonEntrada: any) {
     classes: []
   };
 
+  // Mapear as categorias do JSON de entrada para classes no JSON de saída
+  jsonEntrada.categories.forEach(function(category: any) {
+    var classe = {
+      name: category.name,
+      color: randomColorGenerator(),
+      id: category.id
+    };
+    jsonSaida.classes.push(classe);
+  });
+
+  // Criar um objeto para armazenar as classes
+  var classesObj: any = {};
+
+  // Preencher o objeto com as classes
+  jsonSaida.classes.forEach(function(classe) {
+    classesObj[classe.name] = classe;
+  });
+
   // Mapear as anotações do JSON de entrada para polígonos no JSON de saída
   jsonEntrada.annotations.forEach((annotation: any) => {
     var poligono = {
       points: setCoordenates(annotation.segmentation),
-      color: "#9AB277",
-      name: `${jsonEntrada.annotations.length + 1}-${getClass(jsonEntrada.categories, annotation.category_id).name}`,
+      color: classesObj[getClass(jsonEntrada.categories, annotation.category_id).name].color,
+      name: `${jsonSaida.polygons.length + 1} - ${getClass(jsonEntrada.categories, annotation.category_id).name}`,
       class: getClass(jsonEntrada.categories, annotation.category_id).name,
-      id: annotation.id_mask,
-      idImage: annotation.image_id,
+      id: jsonSaida.polygons.length + 1,
+      imageId: annotation.image_id,
       imageName: getImage(jsonEntrada.images, annotation.image_id).file_name,
       created_at: new Date(),
       resized: false,
     };
     jsonSaida.polygons.push(poligono);
-  });
-
-  // Mapear as categorias do JSON de entrada para classes no JSON de saída
-  jsonEntrada.categories.forEach(function(category: any) {
-    var classe = {
-      name: category.name,
-      color: "#D99EED"
-    };
-    jsonSaida.classes.push(classe);
   });
 
   // Retornar o JSON de saída como string
